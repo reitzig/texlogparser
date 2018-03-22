@@ -25,7 +25,11 @@ module LogParser
     until log_lines.empty?
       line = log_lines.first
 
+      # Use the first pattern that matches. Let's hope that's a good heuristic.
+      # If not, we'll have to let all competitors consume and see who wins --
+      # which we'd decide how?
       matching_pattern = patterns.detect { |p| p.begins_at?(line) }
+
       if matching_pattern.nil?
         # In the hope that scope changes happen not on the same
         # line as messages. Gulp.
