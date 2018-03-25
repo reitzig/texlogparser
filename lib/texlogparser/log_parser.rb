@@ -1,6 +1,8 @@
 # TODO: document
 module LogParser
-  @files
+  def initialize
+    @files = []
+  end
 
   # @return [Array<LogPattern>]
   def patterns

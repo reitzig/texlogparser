@@ -1,3 +1,5 @@
+require "#{File.expand_path(__dir__)}/log_message.rb"
+
 # TODO: Document
 module LogPattern
   # TODO: Document
@@ -26,7 +28,9 @@ module RegExpPattern
   # @option ending [Regexp] :pattern
   # @option ending [:match,:mismatch] :until
   # @option ending [true,false] :inclusive
-  def initialize(start, ending: { pattern: ->(_) { /^\s+$/ }, until: :match, inclusive: false })
+  def initialize(start, ending = { pattern: ->(_) { /^\s+$/ },
+                                   until: :match,
+                                   inclusive: false })
     @start = start
     @ending = ending
   end
@@ -48,9 +52,11 @@ module RegExpPattern
   def read(lines) # TODO: How useful is this? Not very, I'm afraid... there should be functions for source file, line, and level?
     raise NotImplementedError if @ending.nil?
 
-    ending = lines.find_index { |l| ends_at?(l) }
-    ending -= 1 unless @ending[:inclusive]
-    msg = LogMessage.new(lines[0, ending], preformatted: false, level: nil)
+    ending = lines[1, lines.size].find_index { |l| ends_at?(l) }
+    ending += 1 if @ending[:inclusive]
+
+    # Use ending+1 since ending is the index when we drop the first line!
+    msg = LogMessage.new(message: lines[0, ending+1].join, preformatted: false, level: nil)
     [msg, ending + 1]
   end
 end

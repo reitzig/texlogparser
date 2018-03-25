@@ -1,23 +1,23 @@
+require 'minitest/autorun'
 require 'texlogparser'
 
-path = "#{File.expand_path(__dir__)}/texlogs"
+class TeXLogParserTests < Minitest::Test
+  def generic_test(file, expected)
+    parser = TeXLogParser.new
+    path = "#{File.expand_path(__dir__)}/texlogs"
 
-test_cases = [
-  { file: '000.log', expected: { error: 0, warning: 0, info: 0 } }
-]
+    messages = parser.parse(File.open("#{path}/#{file}", &:readlines))
 
-parser = TeXLogParser.new
-test_cases.each do |test|
-  messages = parser.parse(File.open("#{path}/#{test[:file]}"))
+    counts = { error: 0, warning: 0, info: 0 }
+    messages.each { |m|
+      #puts m
+      counts[m.level] += 1
+    }
 
-  counts = { error: 0, warning: 0, info: 0 }
-  messages.each { |m| counts[m.level] += 1 }
+    assert_equal(expected, counts, "Wrong counts when parsing '#{file}'")
+  end
 
-  if counts == test[:expected]
-    puts "OK"
-  else
-    puts "FAIL"
-    puts "\tExpected:\t#{test[:expected]}"
-    puts "\tActual:\t#{counts}"
+  def test_000
+    generic_test('000.log', { error: 2, warning: 2, info: 68 })
   end
 end

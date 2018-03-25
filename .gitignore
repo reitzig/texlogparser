@@ -1,2 +1,6 @@
 .idea/
+.yardoc/
+doc/
+
+.rake_tasks~
 *.gem
