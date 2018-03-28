@@ -19,6 +19,7 @@ end
 
 # TODO: document
 # @attr [Regexp] start
+# @attr [MatchData] start_match
 # @attr [Regexp] ending
 module RegExpPattern
   include LogPattern
@@ -35,12 +36,14 @@ module RegExpPattern
     @ending = ending
   end
 
+  # TODO: document
   def begins_at?(line)
     match = @start.match(line)
     @start_match = match unless match.nil?
     !match.nil?
   end
 
+  # TODO: document
   def ends_at?(line)
     match = !(@ending[:pattern][@start_match] =~ line).nil?
     match == (@ending[:until] == :match)

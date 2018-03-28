@@ -5,11 +5,13 @@ require "#{File.expand_path(__dir__)}/../log_pattern"
 #     Package tocbasic Info: omitting babel extension for `toc'
 #     (tocbasic)             because of feature `nobabel' available
 #     (tocbasic)             for `toc' on input line 132.
+#
+# Note: currently fails if lines get broken badly, e.g. in 000.log:634.
 class PrefixedMultiLinePattern
   include RegExpPattern
 
   def initialize
-    super(/(Package|Class|LaTeX)\s+(?:(\w+)\s+)?(Warning|Error|Info|Message)/,
+    super(/(Package|Class|\w+TeX)\s+(?:(\w+)\s+)?(Warning|Error|Info|Message)/,
           { pattern: ->(m) { /^\s*\(#{m[2]}\)/ },
             until: :mismatch,
             inclusive: false })
@@ -34,11 +36,14 @@ class PrefixedMultiLinePattern
 
     # source file from scope, parser does it
 
+    # TODO: may be split across lines --> remove whitespace before extracting
     suffix_match = /on input line\s+(\d+)(?:\.\s*)?\z/.match(msg.message)
     unless suffix_match.nil?
-      line = suffix_match[1]
+      line = suffix_match[1].to_i
       msg.source_lines = { from: line, to: line }
     end
+
+    # TODO: message itself contains useless line prefixes --> remove
 
     [msg, consumed]
   end
