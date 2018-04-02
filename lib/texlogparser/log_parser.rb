@@ -39,7 +39,6 @@ module LogParser
           # In the hope that scope changes happen not on the same
           # line as messages. Gulp.
           scope_changes(log_lines.first).each { |op|
-            # TODO: debug: print which scope was entered/left
             if op == :pop
               left = @files.pop
               #puts "Finished file #{left.nil? ? "nil" : left}" # TODO: debug mode

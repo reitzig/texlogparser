@@ -12,7 +12,7 @@ class PrefixedMultiLinePattern
 
   def initialize
     super(/(Package|Class|\w+TeX)\s+(?:(\w+)\s+)?(Warning|Error|Info|Message)/,
-          { pattern: ->(m) { /^\s*\(#{m[2]}\)/ },
+          { pattern: ->(m) { /^\s*\(#{m[2]}\)/ }, # BROKEN_BY_LINEBREAKS
             until: :mismatch,
             inclusive: false })
   end
@@ -36,6 +36,7 @@ class PrefixedMultiLinePattern
 
     # source file from scope, parser does it
 
+    # BROKEN_BY_LINEBREAKS
     # TODO: may be split across lines --> remove whitespace before extracting
     suffix_match = /on input line\s+(\d+)(?:\.\s*)?\z/.match(msg.message)
     unless suffix_match.nil?
