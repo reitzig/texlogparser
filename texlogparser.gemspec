@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'tex_log_parser'
-  s.version     = '1.0.0.pre.1'
+  s.version     = '1.0.0.pre.2'
   s.date        = '2018-03-01'
   s.summary     = 'Parses log files of (La)TeX engines'
   s.description = s.summary
