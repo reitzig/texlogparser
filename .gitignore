@@ -4,3 +4,4 @@ doc/
 
 .rake_tasks~
 *.gem
+Gemfile.lock
