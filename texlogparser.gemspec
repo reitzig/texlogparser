@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.executables = ['texlogparser']
   s.files       = Dir['lib/**/*.rb', 'bin/*', 'LICENSE', '*.md']
 
+  s.add_development_dependency 'minitest'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yard'
 
