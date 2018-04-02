@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'texlogparser'
+require 'tex_log_parser'
 
 # TODO read stdin, parse, write default format (file-line? json?) to stdout
 # TODO options for output format?

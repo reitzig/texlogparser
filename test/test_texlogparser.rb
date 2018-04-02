@@ -1,7 +1,7 @@
 require 'minitest/autorun'
-require 'texlogparser'
+require 'tex_log_parser'
 
-class TeXLogParserTests < Minitest::Test
+class TexLogParserTests < Minitest::Test
   # Reads the given file, parses it and compares the counts
   # per message type with the given counts.
   # If all that works out well, returns the list of messages.
@@ -10,7 +10,7 @@ class TeXLogParserTests < Minitest::Test
   # @param [Hash<Symbol,Int>] expected
   # @return [Array<LogMessage>]
   def quick_test(file, expected)
-    parser = TeXLogParser.new
+    parser = TexLogParser.new
     path = "#{File.expand_path(__dir__)}/texlogs"
 
     messages = parser.parse(File.open("#{path}/#{file}", &:readlines))

@@ -1,8 +1,8 @@
-require 'texlogparser/log_parser'
-Dir["#{File.expand_path(__dir__)}/texlogparser/patterns/*.rb"].each { |p| require p }
+require 'tex_log_parser/log_parser'
+Dir["#{File.expand_path(__dir__)}/tex_log_parser/patterns/*.rb"].each { |p| require p }
 
 # TODO: document
-class TeXLogParser
+class TexLogParser
   include LogParser
 
   def patterns

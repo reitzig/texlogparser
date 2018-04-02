@@ -3,7 +3,7 @@ require 'yard'
 
 desc 'Run tests'
 Rake::TestTask.new do |t|
-  t.libs << 'texlogparser'
+  t.libs << 'tex_log_parser'
   t.test_files = FileList['test/test*.rb']
   t.verbose = true
 end
