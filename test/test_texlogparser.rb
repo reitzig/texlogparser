@@ -10,21 +10,21 @@ class TexLogParserTests < Minitest::Test
   # @param [Hash<Symbol,Int>] expected
   # @return [Array<LogMessage>]
   def quick_test(file, expected)
-    parser = TexLogParser.new
     path = "#{File.expand_path(__dir__)}/texlogs"
+    parser = TexLogParser.new(File.open("#{path}/#{file}", &:readlines),
+                              {debug: !ENV['debug'].nil?})
 
-    messages = parser.parse(File.open("#{path}/#{file}", &:readlines))
+    messages = parser.parse
 
     counts = { error: 0, warning: 0, info: 0 }
     messages.each { |m|
-      #puts m
       counts[m.level] += 1
     }
 
     expected.each { |type, exp|
       next if exp.nil?
       assert_equal(exp, counts[type],
-                   "Wrong number of #{type.to_s}s in '#{file}'")
+                   "Wrong number of #{type}s in '#{file}'")
     }
 
     messages

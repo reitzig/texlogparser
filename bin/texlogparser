@@ -1,6 +1,75 @@
 #!/usr/bin/env ruby
 
-require 'tex_log_parser'
+if $PROGRAM_NAME == __FILE__
+  $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+end
 
-# TODO read stdin, parse, write default format (file-line? json?) to stdout
-# TODO options for output format?
+require 'tex_log_parser'
+require 'optparse'
+require 'json'
+
+# Defaults
+options = {
+  debug: false,
+  format: :file_line,
+  input: STDIN,
+  output: STDOUT
+}
+formats = [:file_line, :json]
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: texlogparser [options]'
+  opts.on('-d', '--debug', 'Output debug information') do
+    options[:debug] = true
+  end
+  opts.on('-f ENUM', '--format ENUM', formats,
+          'Output format', "One of: #{formats.map { |e| e.to_s }.join(", ")}") do |format|
+    options[:format] = format
+  end
+  opts.on('-i', '--input PATH', 'Read input from PATH') do |path|
+    unless File.file?(path)
+      STDERR.puts("No such file: #{path}")
+      exit 1
+    end
+
+    options[:input] = path
+  end
+  opts.on('-o', '--output PATH', 'Write output to PATH') do |path|
+    options[:output] = path
+  end
+  opts.on_tail('-h', '--help', 'Show this message') do
+    puts opts
+    exit
+  end
+  opts.on_tail('-v', '--version', 'Show version') do
+    puts TexLogParser::VERSION
+    exit
+  end
+
+  begin
+    opts.parse!
+  rescue => e
+    STDERR.puts e
+    exit 1
+  end
+
+  if !options[:input].is_a?(String) && STDIN.tty?
+    STDERR.puts opts.help
+    exit 1
+  end
+end
+
+input = STDIN
+input = File.open(options[:input], 'r') if options[:input].is_a?(String)
+parser = TexLogParser.new(input, options)
+messages = parser.parse
+
+output = STDOUT
+output = File.open(options[:output], 'w') if options[:output].is_a?(String)
+case options[:format]
+when :file_line
+  output.write(messages.map { |m| m.to_s }.join("\n\n"))
+when :json
+  output.write(JSON.pretty_generate(messages))
+end
+output.close

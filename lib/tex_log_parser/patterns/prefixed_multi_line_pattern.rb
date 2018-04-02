@@ -44,7 +44,7 @@ class PrefixedMultiLinePattern
       msg.source_lines = { from: line, to: line }
     end
 
-    # TODO: message itself contains useless line prefixes --> remove
+    # TODO: message itself contains useless line prefixes --> remove, preformatted = false
 
     [msg, consumed]
   end

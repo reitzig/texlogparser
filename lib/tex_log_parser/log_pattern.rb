@@ -29,11 +29,12 @@ module RegExpPattern
   # @option ending [Regexp] :pattern
   # @option ending [:match,:mismatch] :until
   # @option ending [true,false] :inclusive
-  def initialize(start, ending = { pattern: ->(_) { /^\s+$/ },
+  def initialize(start, ending = { pattern: ->(_) { /^\s*$/ },
                                    until: :match,
                                    inclusive: false })
     @start = start
     @ending = ending
+    @debug = false # TODO: Get the option here
   end
 
   # TODO: document
@@ -50,16 +51,17 @@ module RegExpPattern
   end
 
   # TODO make failable (e.g. EOF)
-  # @param [Array<String>] lines
+  # @param [LogBuffer] lines
   # @return [Array<(LogMessage, Int)>]
-  def read(lines) # TODO: How useful is this? Not very, I'm afraid... there should be functions for source file, line, and level?
+  def read(lines)
     raise NotImplementedError if @ending.nil?
 
-    ending = lines[1, lines.size].find_index { |l| ends_at?(l) }
-    ending += 1 if @ending[:inclusive]
+    ending = lines.find_index(1) { |l| ends_at?(l) }
+    raise "Did not find end of message (pattern '#{self.class}')." if ending.nil?
+    ending -= 1 unless @ending[:inclusive]
 
     # Use ending+1 since ending is the index when we drop the first line!
-    msg = LogMessage.new(message: lines[0, ending+1].join, preformatted: false, level: nil)
+    msg = LogMessage.new(message: lines[0, ending + 1].join("\n"), preformatted: true, level: nil)
     [msg, ending + 1]
   end
 end

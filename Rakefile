@@ -14,7 +14,4 @@ YARD::Rake::YardocTask.new do |t|
   #t.options = ['--any', '--extra', '--opts'] # optional
 end
 
-# TODO Task for Doc generation? (yard)
-# TODO Tasks for Gem bundling, pushing?
-
 task :default => :test
