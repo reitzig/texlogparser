@@ -1,5 +1,3 @@
-require "#{File.expand_path(__dir__)}/../log_pattern"
-
 # Matches messages of this form:
 #
 #   ./plain.tex:31: Undefined control sequence.

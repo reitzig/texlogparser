@@ -1,5 +1,3 @@
-require "#{File.expand_path(__dir__)}/log_message.rb"
-
 # TODO: Document
 module LogPattern
   # TODO: Document

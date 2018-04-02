@@ -1,5 +1,6 @@
+require 'tex_log_parser/log_message'
 require 'tex_log_parser/log_parser'
-require 'tex_log_parser/version'
+require "tex_log_parser/log_pattern"
 Dir["#{File.expand_path(__dir__)}/tex_log_parser/patterns/*.rb"].each { |p| require p }
 
 # TODO: document

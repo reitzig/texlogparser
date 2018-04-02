@@ -1,5 +1,3 @@
-require "#{File.expand_path(__dir__)}/log_buffer.rb"
-
 # TODO: document
 module LogParser
   attr_reader :messages

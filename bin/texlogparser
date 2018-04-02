@@ -1,9 +1,5 @@
 #!/usr/bin/env ruby
 
-if $PROGRAM_NAME == __FILE__
-  $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-end
-
 require 'tex_log_parser'
 require 'optparse'
 require 'json'
@@ -69,6 +65,7 @@ output = File.open(options[:output], 'w') if options[:output].is_a?(String)
 case options[:format]
 when :file_line
   output.write(messages.map { |m| m.to_s }.join("\n\n"))
+  # TODO: print summary?
 when :json
   output.write(JSON.pretty_generate(messages))
 end
