@@ -7,7 +7,7 @@ require 'tex_log_parser/version'
 Gem::Specification.new do |s|
   s.name        = 'tex_log_parser'
   s.version     = TexLogParser::VERSION
-  s.date        = '2018-03-01'
+  s.date        = Time.now().strftime('%Y-%m-%d')
   s.summary     = 'Parses log files of (La)TeX engines'
   s.description = s.summary
   s.authors     = ['Raphael Reitzig']
