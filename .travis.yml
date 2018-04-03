@@ -11,6 +11,7 @@ before_install:
 deploy:
   provider: rubygems
   gem: tex_log_parser
+  gemspec: texlogparser.gemspec
   on:
     tags: true
   api_key:
