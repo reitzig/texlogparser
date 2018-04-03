@@ -10,6 +10,7 @@ before_install:
 
 deploy:
   provider: rubygems
+  gem: tex_log_parser
   on:
     tags: true
   api_key:
