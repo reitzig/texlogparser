@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rake/testtask'
 require 'yard'
 
@@ -10,8 +12,8 @@ end
 
 desc 'Build documentation'
 YARD::Rake::YardocTask.new do |t|
-  #t.files   = ['lib/**/*.rb', OTHER_PATHS]   # optional
-  #t.options = ['--any', '--extra', '--opts'] # optional
+  # t.files   = ['lib/**/*.rb', OTHER_PATHS]   # optional
+  # t.options = ['--any', '--extra', '--opts'] # optional
 end
 
-task :default => :test
+task default: :test

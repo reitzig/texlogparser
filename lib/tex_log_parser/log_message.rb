@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 # @attr [String] message
@@ -17,8 +19,6 @@ class LogMessage
     @preformatted = preformatted
     @level = level
     @pattern = pattern
-
-    @debug = false # TODO: get option here
   end
 
   attr_accessor :message, :source_file, :source_lines, :log_lines,
@@ -33,8 +33,8 @@ class LogMessage
             end
 
     message = @message
-    message = message.split("\n").map {|l| l.strip }.join("") unless @preformatted
-    message += "\nLog pattern: '#{@pattern}'" if @debug
+    message = message.split("\n").map(&:strip).join(' ') unless @preformatted
+    message += "\nLog pattern: '#{@pattern}'" if Logger.debugging
 
     <<~MSG
       #{@source_file}#{lines}: #{@level.to_s.upcase}
@@ -42,15 +42,16 @@ class LogMessage
     MSG
   end
 
-  def to_json(options={})
+  def to_json(_options = {})
     hash = {
-        level: @level,
-        source_file: @source_file,
-        source_lines: @source_lines,
-        message: @message,
-        log_lines: @log_lines,
-        preformatted: @preformatted
+      level: @level,
+      source_file: @source_file,
+      source_lines: @source_lines,
+      message: @message,
+      log_lines: @log_lines,
+      preformatted: @preformatted
     }
+    hash[:pattern] = @pattern if Logger.debugging
     JSON.pretty_generate hash
   end
 end

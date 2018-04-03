@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Matches messages of this form:
 #
 #     Package tocbasic Info: omitting babel extension for `toc'
@@ -29,7 +31,7 @@ class PrefixedMultiLinePattern
       msg.level = :info
     else
       # TODO: abort?
-      # TODO: debug output
+      Logger.debug 'Unhandled message type!'
     end
 
     # source file from scope, parser does it

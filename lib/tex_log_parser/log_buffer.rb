@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LogBuffer
   # @param [Array<String>,IO] log
   def initialize(log)
@@ -10,6 +12,10 @@ class LogBuffer
 
   def empty?
     @buffer.empty? && stream_is_done?
+  end
+
+  def buffer_size
+    @buffer.size
   end
 
   def first

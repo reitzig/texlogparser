@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Matches messages of this form:
 #
 #   ./plain.tex:31: Undefined control sequence.
@@ -7,7 +9,7 @@ class FileLineError
   include RegExpPattern
 
   def initialize
-    super(/^(\/?(?:.*?\/)*[^\/]+):(\d+):/)
+    super(%r{^(/?(?:.*?/)*[^/]+):(\d+):})
   end
 
   def read(lines)
@@ -16,7 +18,7 @@ class FileLineError
 
     msg.source_file = @start_match[1]
     line = @start_match[2].to_i
-    msg.source_lines = { from: line, to: line}
+    msg.source_lines = { from: line, to: line }
     msg.preformatted = true
     msg.level = :error
 

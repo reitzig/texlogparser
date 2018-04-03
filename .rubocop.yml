@@ -1,2 +1,18 @@
 AllCops:
   TargetRubyVersion: 2.3
+
+# The default, 80, is a nice-to-have but not really all that relevant
+# on today's wide screens. Use 120 as a "hard" cap and try to be shorter.
+Metrics/LineLength:
+  Max: 120
+
+# The default, 10, seems silly here.
+Metrics/MethodLength:
+  Max: 25
+
+Style/RegexpLiteral:
+  EnforcedStyle: mixed
+
+# I'd rather have empty else branches than forget one.
+Style/EmptyElse:
+  Enabled: false

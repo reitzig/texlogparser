@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 # TODO: Document
 module LogPattern
   # TODO: Document
-  # @param [String] line
+  # @param [String] _line
   # @return [true,false]
-  def begins_at?(line)
+  def begins_at?(_line)
     raise NotImplementedError
   end
 
   # TODO: Document
-  # @param [Array<String>] lines
+  # @param [Array<String>] _lines
   # @return [Array<(LogMessage, Int)>]
-  def read(lines)
+  def read(_lines)
     raise NotImplementedError
   end
 end
@@ -32,7 +34,7 @@ module RegExpPattern
                                    inclusive: false })
     @start = start
     @ending = ending
-    @debug = false # TODO: Get the option here
+    @ending = ending
   end
 
   # TODO: document
@@ -48,7 +50,7 @@ module RegExpPattern
     match == (@ending[:until] == :match)
   end
 
-  # TODO make failable (e.g. EOF)
+  # TODO: make failable (e.g. EOF)
   # @param [LogBuffer] lines
   # @return [Array<(LogMessage, Int)>]
   def read(lines)
@@ -59,7 +61,8 @@ module RegExpPattern
     ending -= 1 unless @ending[:inclusive]
 
     # Use ending+1 since ending is the index when we drop the first line!
-    msg = LogMessage.new(message: lines[0, ending + 1].join("\n"), preformatted: true, level: nil)
+    msg = LogMessage.new(message: lines[0, ending + 1].join("\n"),
+                         preformatted: true, level: nil, pattern: self.class)
     [msg, ending + 1]
   end
 end

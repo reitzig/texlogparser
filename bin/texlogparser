@@ -1,25 +1,26 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'tex_log_parser'
+require 'tex_log_parser/version'
 require 'optparse'
 require 'json'
 
 # Defaults
 options = {
-  debug: false,
   format: :file_line,
   input: STDIN,
   output: STDOUT
 }
-formats = [:file_line, :json]
+formats = %i[file_line json]
 
 OptionParser.new do |opts|
   opts.banner = 'Usage: texlogparser [options]'
   opts.on('-d', '--debug', 'Output debug information') do
-    options[:debug] = true
+    Logger.debugging = true
   end
   opts.on('-f ENUM', '--format ENUM', formats,
-          'Output format', "One of: #{formats.map { |e| e.to_s }.join(", ")}") do |format|
+          'Output format', "One of: #{formats.map(&:to_s).join(', ')}") do |format|
     options[:format] = format
   end
   opts.on('-i', '--input PATH', 'Read input from PATH') do |path|
@@ -44,7 +45,7 @@ OptionParser.new do |opts|
 
   begin
     opts.parse!
-  rescue => e
+  rescue StandardError => e
     STDERR.puts e
     exit 1
   end
@@ -64,7 +65,7 @@ output = STDOUT
 output = File.open(options[:output], 'w') if options[:output].is_a?(String)
 case options[:format]
 when :file_line
-  output.write(messages.map { |m| m.to_s }.join("\n\n"))
+  output.write(messages.map(&:to_s).join("\n\n"))
   # TODO: print summary?
 when :json
   output.write(JSON.pretty_generate(messages))
