@@ -101,4 +101,26 @@ class TexLogParserTests < Minitest::Test
                    log_lines: { from: 675, to: 675 },
                    level: :warning)
   end
+
+  def test_001
+    # @type [Array<LogMessage>] messages
+    messages = quick_test('001.log', error: 0, warning: 6, info: 71)
+
+    # Overfull \hbox (77.11191pt too wide) in paragraph at lines 33--34
+    verify_message(messages,
+                   message: /Overfull \\hbox/,
+                   source_file: /plain\.tex/,
+                   source_lines: { from: 33, to: 34 },
+                   log_lines: { from: 684, to: 685 },
+                   level: :warning)
+
+    # Underfull \hbox (badness 10000) in paragraph at lines 35--36
+    verify_message(messages,
+                   message: /Underfull \\hbox/,
+                   source_file: /plain\.tex/,
+                   source_lines: { from: 35, to: 36 },
+                   log_lines: { from: 689, to: 690 },
+                   level: :warning)
+  end
 end
+

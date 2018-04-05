@@ -43,6 +43,7 @@ module LogParser
       skip_empty_lines
     end
 
+    # TODO: Remove duplicates?
     @messages
   end
 

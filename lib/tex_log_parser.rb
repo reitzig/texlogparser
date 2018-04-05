@@ -12,7 +12,9 @@ class TexLogParser
   include LogParser
 
   def patterns
-    [FileLineError.new, PrefixedMultiLinePattern.new]
+    [FileLineError.new,
+     PrefixedMultiLinePattern.new,
+     BadHboxWarning.new]
   end
 
   def scope_changes(line)
