@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.4.14)  28 FEB 2018 01:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.4.14)  7 APR 2018 16:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**plain.tex
-(./plain.tex
+**000.tex
+(./000.tex
 LaTeX2e <2017/01/01> patch level 3
 Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
@@ -590,8 +590,8 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip55
 )
-(./plain.aux)
-\openout1 = `plain.aux'.
+(./000.aux)
+\openout1 = `000.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
@@ -653,16 +653,16 @@ LaTeX Info: Redefining \ref on input line 24.
 LaTeX Info: Redefining \pageref on input line 24.
 LaTeX Info: Redefining \nameref on input line 24.
 
-(./plain.out) (./plain.out)
+(./000.out) (./000.out)
 \@outlinefile=\write3
-\openout3 = `plain.out'.
+\openout3 = `000.out'.
 
- (./plain.toc)
+ (./000.toc)
 \tf@toc=\write4
-\openout4 = `plain.toc'.
+\openout4 = `000.toc'.
 
 
-./plain.tex:30: Undefined control sequence.
+./000.tex:30: Undefined control sequence.
 l.30 ...ven \emph{particularly} meaningful\fotnote
                                                   {Test}.
 The control sequence at the end of the top line
@@ -674,7 +674,7 @@ and I'll forget about whatever was undefined.
 
 LaTeX Warning: Reference `warnings' on page 1 undefined on input line 31.
 
-./plain.tex:31: Undefined control sequence.
+./000.tex:31: Undefined control sequence.
 l.31 ...t contains some \ref{warnings} and \errors
                                                    for testing.
 The control sequence at the end of the top line
@@ -683,37 +683,37 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 36.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 38.
 [1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 36.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 38.
 
-(./plain.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 36.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 36.
-Package rerunfilecheck Info: File `plain.out' has not changed.
+(./000.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 38.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 38.
+Package rerunfilecheck Info: File `000.out' has not changed.
 (rerunfilecheck)             Checksum: 6C0F73E4B35E36D997E94C545BA71E8F;80.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 36.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 38.
  ) 
 Here is how much of TeX's memory you used:
  6536 strings out of 493013
- 91576 string characters out of 6133328
+ 91546 string characters out of 6133328
  178532 words of memory out of 5000000
  10011 multiletter control sequences out of 15000+600000
  5198 words of font info for 19 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,10n,43p,244b,337s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,10n,43p,242b,337s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
 usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr
 /local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on plain.pdf (1 page, 56791 bytes).
+Output written on 000.pdf (1 page, 56649 bytes).
 PDF statistics:
  46 PDF objects out of 1000 (max. 8388607)
  37 compressed objects within 1 object stream

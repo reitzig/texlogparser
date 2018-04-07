@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.4.14)  6 APR 2018 00:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.4.14)  7 APR 2018 16:53
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**plain.tex
-(./plain.tex
+**001.tex
+(./001.tex
 LaTeX2e <2017/01/01> patch level 3
 Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
@@ -590,8 +590,8 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip55
 )
-(./plain.aux)
-\openout1 = `plain.aux'.
+(./001.aux)
+\openout1 = `001.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
@@ -653,13 +653,13 @@ LaTeX Info: Redefining \ref on input line 24.
 LaTeX Info: Redefining \pageref on input line 24.
 LaTeX Info: Redefining \nameref on input line 24.
 
-(./plain.out) (./plain.out)
+(./001.out) (./001.out)
 \@outlinefile=\write3
-\openout3 = `plain.out'.
+\openout3 = `001.out'.
 
- (./plain.toc)
+ (./001.toc)
 \tf@toc=\write4
-\openout4 = `plain.toc'.
+\openout4 = `001.toc'.
 
 LaTeX Font Info:    Try loading font information for U+msa on input line 30.
 
@@ -681,7 +681,7 @@ LaTeX Warning: Reference `warnings' on page 1 undefined on input line 31.
 LaTeX Warning: Reference `errors' on page 1 undefined on input line 31.
 
 
-Overfull \hbox (77.11191pt too wide) in paragraph at lines 33--34
+Overfull \hbox (68.36201pt too wide) in paragraph at lines 33--34
 []\OT1/cmr/m/n/10 Let's try to for-ce an over-full box: [] 
  []
 
@@ -701,10 +701,10 @@ Package atveryend Info: Empty hook `BeforeClearDocument' on input line 40.
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 40.
 
-(./plain.aux)
+(./001.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 40.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 40.
-Package rerunfilecheck Info: File `plain.out' has not changed.
+Package rerunfilecheck Info: File `001.out' has not changed.
 (rerunfilecheck)             Checksum: 6C0F73E4B35E36D997E94C545BA71E8F;80.
 
 
@@ -714,12 +714,12 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 40.
  ) 
 Here is how much of TeX's memory you used:
  6601 strings out of 493013
- 92631 string characters out of 6133328
+ 92601 string characters out of 6133328
  179532 words of memory out of 5000000
  10045 multiletter control sequences out of 15000+600000
  10925 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,10n,43p,244b,339s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,10n,43p,242b,339s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
@@ -728,7 +728,7 @@ usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr
 cal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
 /texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/te
 xlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on plain.pdf (1 page, 79520 bytes).
+Output written on 001.pdf (1 page, 80558 bytes).
 PDF statistics:
  60 PDF objects out of 1000 (max. 8388607)
  48 compressed objects within 1 object stream

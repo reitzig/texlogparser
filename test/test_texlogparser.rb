@@ -99,17 +99,16 @@ class TexLogParserTests < Minitest::Test
 
   def test_000
     # @type [Array<LogMessage>] messages
-    messages = quick_test('000.log', { error: 2, warning: 2, info: 68 },
-                          {
-                            660 => ['push ./plain.toc', 'pop  ./plain.toc'],
-                            644 => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/nameref.sty'],
-                            651 => ['pop  /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/nameref.sty']
-                          })
+    messages = quick_test('000_pdf_fl.log', { error: 2, warning: 2, info: 68 },
+                          660 => ['push ./plain.toc', 'pop  ./plain.toc'],
+                          644 => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/nameref.sty'],
+                          651 => ['pop  /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/nameref.sty']
+                          )
 
     # ./plain.tex:31: Undefined control sequence.
     verify_message(messages,
                    message: /Undefined control sequence/,
-                   source_file: /plain\.tex/,
+                   source_file: /000\.tex/,
                    source_lines: { from: 31, to: 31 },
                    log_lines: { from: 677, to: 684 },
                    level: :error)
@@ -117,7 +116,7 @@ class TexLogParserTests < Minitest::Test
     # LaTeX Warning: Reference `warnings' on page 1 undefined on input line 31.
     verify_message(messages,
                    message: /Reference `warnings' on page 1 undefined/,
-                   source_file: /plain\.tex/,
+                   source_file: /000\.tex/,
                    source_lines: { from: 31, to: 31 },
                    log_lines: { from: 675, to: 675 },
                    level: :warning)
@@ -125,12 +124,12 @@ class TexLogParserTests < Minitest::Test
 
   def test_001
     # @type [Array<LogMessage>] messages
-    messages = quick_test('001.log', error: 0, warning: 6, info: 71)
+    messages = quick_test('001_pdf_fl.log', error: 0, warning: 6, info: 71)
 
     # Overfull \hbox (77.11191pt too wide) in paragraph at lines 33--34
     verify_message(messages,
                    message: /Overfull \\hbox/,
-                   source_file: /plain\.tex/,
+                   source_file: /001\.tex/,
                    source_lines: { from: 33, to: 34 },
                    log_lines: { from: 684, to: 685 },
                    level: :warning)
@@ -138,7 +137,7 @@ class TexLogParserTests < Minitest::Test
     # Underfull \hbox (badness 10000) in paragraph at lines 35--36
     verify_message(messages,
                    message: /Underfull \\hbox/,
-                   source_file: /plain\.tex/,
+                   source_file: /001\.tex/,
                    source_lines: { from: 35, to: 36 },
                    log_lines: { from: 689, to: 690 },
                    level: :warning)
@@ -146,20 +145,19 @@ class TexLogParserTests < Minitest::Test
 
   def test_002
     # @type [Array<LogMessage>] messages
-    messages = quick_test('002.log', { error: 4, warning: 0, info: 1 },
-                          {
-                            11 => ["push /usr/local/texlive/2016/texmf-dist/tex/generic/german/ngerman.sty"],
-                            12 => ["pop  /usr/local/texlive/2016/texmf-dist/tex/generic/german/ngerman.sty"],
-                            44 => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty",
-                                   "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty",
-                                   "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/hyperref.sty"],
-                            52 => [],
-                            53 => ["pop  /usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii",
-                                   "push /usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty"],
-                            61 => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/bbold/Ubbold.fd",
-                                   "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/bbold/Ubbold.fd",
-                                   "pop  ./plain.tex"]
-                          })
+    messages = quick_test('002_pdf_fl.log', { error: 4, warning: 0, info: 1 },
+                          11 => ['push /usr/local/texlive/2016/texmf-dist/tex/generic/german/ngerman.sty'],
+                          12 => ['pop  /usr/local/texlive/2016/texmf-dist/tex/generic/german/ngerman.sty'],
+                          44 => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty',
+                                 'pop  /usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty',
+                                 'pop  /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/hyperref.sty'],
+                          52 => [],
+                          53 => ['pop  /usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii',
+                                 'push /usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty'],
+                          61 => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/bbold/Ubbold.fd',
+                                 'pop  /usr/local/texlive/2016/texmf-dist/tex/latex/bbold/Ubbold.fd',
+                                 'pop  ./002.tex']
+                          )
 
     # Runaway argument?
     # {Test. Also, it contains some \ref {warnings} and \ref {errors} for t\ETC.
@@ -171,14 +169,14 @@ class TexLogParserTests < Minitest::Test
     # ! File ended while scanning use of \@footnotetext.
     verify_message(messages,
                    message: /File ended while scanning/,
-                   source_file: /plain\.tex/,
+                   source_file: /002\.tex/,
                    log_lines: { from: 64, to: 67 },
                    level: :error)
 
     # ! Emergency stop.
     verify_message(messages,
                    message: /Emergency stop/,
-                   source_file: /plain\.tex/,
+                   source_file: /002\.tex/,
                    log_lines: { from: 69, to: 70 },
                    level: :error)
 
@@ -192,17 +190,16 @@ class TexLogParserTests < Minitest::Test
   def multitest_003(suffix, line_offset)
     # @type [Array<LogMessage>] messages
     messages = quick_test("003_#{suffix}.log", { error: 12, warning: 6 },
-                          {
-                            49 + line_offset => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty"],
-                            52 + line_offset => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty"],
-                            54 + line_offset => ["pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty"],
-                            60 + line_offset => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics-def/xetex.def"],
-                            61 + line_offset => ["push dummy"], # BROKEN_BY_LINEBREAKS
-                            62 + line_offset => ["pop  dummy"],  # BROKEN_BY_LINEBREAKS
-                            63 + line_offset => ["pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics-def/xetex.def",
-                                                 "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty"],
-                            66 + line_offset => ["pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphicx.sty"]
-                          })
+                          49 + line_offset => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty'],
+                          52 + line_offset => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty'],
+                          54 + line_offset => ['pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty'],
+                          60 + line_offset => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics-def/xetex.def'],
+                          61 + line_offset => ['push dummy'], # BROKEN_BY_LINEBREAKS
+                          62 + line_offset => ['pop  dummy'],  # BROKEN_BY_LINEBREAKS
+                          63 + line_offset => ['pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics-def/xetex.def',
+                                               'pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty'],
+                          66 + line_offset => ['pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphicx.sty']
+                          )
 
     # Defining command \setsansfont with sig. 'O{}mO{}' on line 503
     verify_message(messages,
@@ -230,11 +227,11 @@ class TexLogParserTests < Minitest::Test
   end
 
   def test_003_xe_nfl
-    multitest_003("xe_nfl", 0)
+    multitest_003('xe_nfl', 0)
   end
 
   def test_003_xe_fl
-    multitest_003("xe_fl", 1)
+    multitest_003('xe_fl', 1)
   end
 end
 
