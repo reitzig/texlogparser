@@ -1,0 +1,38 @@
+version: 2
+
+jobs:
+  test-2.3:
+    docker:
+      - image: circleci/ruby:2.3
+    steps:
+      - checkout
+      - run: gem update --system
+      - run: gem install bundler
+      - run: gem install
+      - run: rake test
+  test-2.4:
+      docker:
+        - image: circleci/ruby:2.4
+      steps:
+        - checkout
+        - run: gem update --system
+        - run: gem install bundler
+        - run: gem install
+        - run: rake test
+  test-2.5:
+      docker:
+        - image: circleci/ruby:2.5
+      steps:
+        - checkout
+        - run: gem update --system
+        - run: gem install bundler
+        - run: gem install
+        - run: rake test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test-2.3
+      - test-2.4
+      - test-2.5
