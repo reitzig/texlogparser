@@ -54,8 +54,23 @@ jobs:
         - persist_to_workspace:
             root: .
             paths:
+              - .circleci/gem_credentials
               - tex_log_parser*.gem
               - test/texlogs/*.log
+  doc:
+      docker:
+          - image: circleci/ruby:2.5
+        steps:
+          - checkout
+          - run:
+              name: Prepare Ruby environment
+              command: |
+                gem update --system
+                gem install bundler
+                bundle install
+          - run:
+              name: Build Documentation
+              command: rake doc
   test-cli:
       docker:
         - image: circleci/ruby:2.5
@@ -71,20 +86,22 @@ jobs:
         - run:
             name: Test an actual log
             command: texlogparser -i `ls -d1 test/texlogs/*.log | head -1`
-# TODO How do we actually deploy? Authentication with rubygems.org missing!
-#  deploy:
-#      docker:
-#        - image: circleci/ruby:2.5
-#        - attach_workspace:
-#            at: .
-#        - run:
-#            name: Deploy Gem
-#            command: gem push tex_log_parser*.gem
-#      filters:
-#        branches:
-#          ignore: /.*/
-#        tags:
-#          only: /^v.*/
+  deploy:
+      docker:
+        - image: circleci/ruby:2.5
+        - attach_workspace:
+            at: .
+        - run:
+            name: Deploy Gem
+            command: |
+              cat .circleci/gem_credentials | sed -e "s/__RUBYGEMS_API_KEY__/${RUBYGEMS_API_KEY}/" > ~/.gem/credentials
+              gem push tex_log_parser*.gem
+              shred -u ~/.gem/credentials
+      filters:
+        branches:
+          ignore: /.*/
+        tags:
+          only: /^v.*/
 
 workflows:
   version: 2
@@ -93,6 +110,7 @@ workflows:
       - test-2.3
       - test-2.4
       - test-2.5
+      - doc
       - build:
           requires:
             - test-2.3
@@ -101,7 +119,10 @@ workflows:
       - test-cli:
           requires:
             - build
-            #- deploy
+      - deploy:
+          requires:
+            - test-cli
+            - doc
 
 # Notes:
 # - store_artifacts --> make Gem file downloadable from Circle
