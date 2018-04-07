@@ -15,16 +15,16 @@
 #                    relax
 #   l.40 \end{document}
 class StandardError
-  include RegExpPattern
+  include LogParser::RegExpPattern
 
   def initialize
-    super(/^\! \w+/,
+    super(/^! \w+/,
           { pattern: ->(_) { /^\s*<\*>\s+([^\s]+)|^l\.(\d+)\s+/ }, until: :match, inclusive: true }
     )
   end
 
   def read(lines)
-    # @type [LogMessage] msg
+    # @type [Message] msg
     msg, consumed = super(lines)
 
     msg.level = :error

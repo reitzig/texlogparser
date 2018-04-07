@@ -8,7 +8,7 @@
 #
 # Note: currently fails if lines get broken badly, e.g. in 000.log:634.
 class PrefixedMultiLinePattern
-  include RegExpPattern
+  include LogParser::RegExpPattern
 
   def initialize
     super(/(Package|Class|\w+TeX)\s+(?:(\w+)\s+)?(Warning|Error|Info|Message)/,
@@ -18,7 +18,7 @@ class PrefixedMultiLinePattern
   end
 
   def read(lines)
-    # @type [LogMessage] msg
+    # @type [Message] msg
     # @type [Int] consumed
     msg, consumed = super(lines)
 

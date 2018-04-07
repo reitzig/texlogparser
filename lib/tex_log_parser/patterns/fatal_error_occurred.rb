@@ -5,16 +5,16 @@
 # !  ==> Fatal error occurred, no output PDF file produced!
 # Transcript written on plain.log.
 class FatalErrorOccurred
-  include RegExpPattern
+  include LogParser::RegExpPattern
 
   def initialize
-    super(/^\!\s+==>/,
+    super(/^!\s+==>/,
           { pattern: ->(_) { /Transcript written/ }, until: :match, inclusive: true }
     )
   end
 
   def read(lines)
-    # @type [LogMessage] msg
+    # @type [Message] msg
     msg, consumed = super(lines)
 
     msg.level = :error

@@ -38,10 +38,10 @@
 #     . Defining command \fontspec with sig. 'O{}mO{}' on line 472.
 #     .................................................
 class HighlightedMessages
-  include RegExpPattern
+  include LogParser::RegExpPattern
 
   def initialize
-    super(/^(\!{3,}|\.{3,})$/,
+    super(/^(!{3,}|\.{3,})$/,
           { pattern: lambda { |m|
                        if m[1][0] == '!'
                          /^l\.(\d+)/
@@ -54,7 +54,7 @@ class HighlightedMessages
   end
 
   def read(lines)
-    # @type [LogMessage] msg
+    # @type [Message] msg
     msg, consumed = super(lines)
 
     is_error = @start_match[1][0] == '!'
@@ -75,7 +75,7 @@ class HighlightedMessages
       msg.level = :error
 
       msg.message.gsub!(/^.*?For immediate help type.*$/, '')
-      msg.message.gsub!(/^\!\.+\s*$/, '')
+      msg.message.gsub!(/^!\.+\s*$/, '')
       msg.message.gsub!(/^l\.\d+\s+.*$/, '')
     else
       # BROKEN_BY_LINEBREAKS

@@ -2,7 +2,7 @@
 
 # TODO: document
 class BadHboxWarning
-  include RegExpPattern
+  include LogParser::RegExpPattern
 
   def initialize
     super(/^(Over|Under)full \\hbox.*at lines (\d+)--(\d+)/,
@@ -11,7 +11,7 @@ class BadHboxWarning
   end
 
   def read(lines)
-    # @type [LogMessage] msg
+    # @type [Message] msg
     msg, consumed = super(lines)
 
     msg.source_lines = { from: @start_match[2].to_i,

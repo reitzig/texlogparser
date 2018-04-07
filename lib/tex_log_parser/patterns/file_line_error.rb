@@ -6,14 +6,14 @@
 #   l.31 ...t contains some \ref{warnings} and \errors
 #                                                       for testing.
 class FileLineError
-  include RegExpPattern
+  include LogParser::RegExpPattern
 
   def initialize
     super(%r{^(/?(?:.*?/)*[^/]+):(\d+):})
   end
 
   def read(lines)
-    # @type [LogMessage] msg
+    # @type [Message] msg
     msg, consumed = super(lines)
 
     msg.source_file = @start_match[1]

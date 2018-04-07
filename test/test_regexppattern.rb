@@ -5,7 +5,7 @@ require 'tex_log_parser/log_pattern'
 require 'tex_log_parser/log_buffer'
 require 'tex_log_parser/log_message'
 
-class LogBufferArrayTests < Minitest::Test
+class RegExpPatternTest < Minitest::Test
   def initialize(param)
     super(param)
 
@@ -23,7 +23,7 @@ class LogBufferArrayTests < Minitest::Test
   end
 
   def example_buffer
-    LogBuffer.new(StringIO.new(@example))
+    LogParser::Buffer.new(StringIO.new(@example))
   end
 
   class ExamplePattern

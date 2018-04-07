@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'log_parser/buffer'
+require 'log_parser/message'
+require 'log_parser/pattern'
+
 # TODO: document
 module LogParser
   attr_reader :messages
@@ -13,13 +17,13 @@ module LogParser
 
     @messages = []
     @log_line_number = 1
-    @lines = LogBuffer.new(log)
+    @lines = LogParser::Buffer.new(log)
 
     Logger.debug "Parsing from '#{log}'"
     @scope_changes_by_line = {} if Logger.debug?
   end
 
-  # @return [Array<LogPattern>]
+  # @return [Array<Pattern>]
   def patterns
     raise NotImplementedError
   end
@@ -37,7 +41,7 @@ module LogParser
   end
 
   # TODO: document
-  # @return [Array<LogMessage>]
+  # @return [Array<Message>]
   def parse
     skip_empty_lines
     until empty?
@@ -59,7 +63,7 @@ module LogParser
   end
 
   # TODO: document
-  # @return [LogMessage,nil]
+  # @return [Message,nil]
   def parse_next_lines
     raise 'Parse already done!' if @lines.empty?
 
@@ -91,16 +95,16 @@ module LogParser
 
   def remove_consumed_lines(i)
     @lines.forward(i)
-    @log_line_number                         += i
+    @log_line_number += i
 
-    @scope_changes_by_line[@log_line_number] = [] if Logger.debug? && i > 0
+    @scope_changes_by_line[@log_line_number] = [] if Logger.debug? && i.positive?
   end
 
-  # @return [LogMessage,nil]
+  # @return [Message,nil]
   def consume_pattern(pattern)
     # Apply the pattern, i.e. read the next message!
 
-    # @type [LogMessage] message
+    # @type [Message] message
     message, consumed_lines = pattern.read(@lines)
     message.log_lines = { from: @log_line_number,
                           to: @log_line_number + consumed_lines - 1 }

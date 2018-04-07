@@ -5,7 +5,7 @@
 #   Runaway argument?
 #   {Test. Also, it contains some \ref {warnings} and \ref {errors} for t\ETC.
 class RunawayParameterError
-  include RegExpPattern
+  include LogParser::RegExpPattern
 
   def initialize
     super(/^Runaway argument\?/,
@@ -14,7 +14,7 @@ class RunawayParameterError
   end
 
   def read(lines)
-    # @type [LogMessage] msg
+    # @type [Message] msg
     msg, consumed = super(lines)
 
     msg.level = :error

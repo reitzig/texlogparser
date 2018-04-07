@@ -7,7 +7,7 @@ require 'tex_log_parser/version'
 Gem::Specification.new do |s|
   s.name        = 'tex_log_parser'
   s.version     = TexLogParser::VERSION
-  s.date        = Time.now().strftime('%Y-%m-%d')
+  s.date        = Time.now.strftime('%Y-%m-%d')
   s.summary     = 'Parses log files of (La)TeX engines'
   s.description = s.summary
   s.authors     = ['Raphael Reitzig']
@@ -19,8 +19,10 @@ Gem::Specification.new do |s|
   s.executables = ['texlogparser']
   s.files       = Dir['lib/**/*.rb', 'bin/*', 'LICENSE', '*.md']
 
+  s.add_development_dependency 'github-markup', '~> 2.0'
   s.add_development_dependency 'minitest', '~> 5.10'
   s.add_development_dependency 'rake', '~> 12.3'
+  s.add_development_dependency 'redcarpet', '~> 3.4'
   s.add_development_dependency 'yard', '~> 0.9'
 
   s.add_runtime_dependency 'json', '~> 2.1'

@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 require 'logger'
-require 'tex_log_parser/log_buffer'
-require 'tex_log_parser/log_message'
-require 'tex_log_parser/log_parser'
-require 'tex_log_parser/log_pattern'
+require 'log_parser/log_parser'
 Dir["#{File.expand_path(__dir__)}/tex_log_parser/patterns/*.rb"].each { |p| require p }
 
 # TODO: document
@@ -30,6 +27,8 @@ class TexLogParser
   end
 
   def scope_changes(line)
+    pushed_dummy = false
+
     result =
       case line
       when /^\s*\(([^()]*)\)\s*(.*)$/

@@ -12,8 +12,9 @@ end
 
 desc 'Build documentation'
 YARD::Rake::YardocTask.new do |t|
+  t.name = 'doc'
   # t.files   = ['lib/**/*.rb', OTHER_PATHS]   # optional
-  # t.options = ['--any', '--extra', '--opts'] # optional
+  t.options = %w(--markup-provider=redcarpet --markup=markdown --main=README.md)
 end
 
 task default: :test
