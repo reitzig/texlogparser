@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require 'tex_log_parser/log_pattern'
-require 'tex_log_parser/log_buffer'
-require 'tex_log_parser/log_message'
+require 'log_parser/pattern'
+require 'log_parser/buffer'
+require 'log_parser/message'
 
 class RegExpPatternTest < Minitest::Test
   def initialize(param)
@@ -27,7 +27,7 @@ class RegExpPatternTest < Minitest::Test
   end
 
   class ExamplePattern
-    include RegExpPattern
+    include LogParser::RegExpPattern
   end
 
   # @param [Hash] options

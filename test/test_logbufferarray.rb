@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require 'tex_log_parser/log_buffer'
+require 'log_parser/buffer'
 
 class LogBufferArrayTests < Minitest::Test
   def debug(*elements)

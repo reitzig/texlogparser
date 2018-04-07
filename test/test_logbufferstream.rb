@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require 'tex_log_parser/log_buffer'
+require 'log_parser/buffer'
 
 require "#{__dir__}/test_logbufferarray"
 
