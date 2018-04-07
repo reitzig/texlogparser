@@ -51,20 +51,16 @@ jobs:
         - run:
             name: Build Gem
             command: gem build texlogparser.gemspec
+        - persist_to_workspace:
+            root: .
+            paths:
+              - tex_log_parser*.gem
   test-cli:
       docker:
         - image: circleci/ruby:2.5
       steps:
-        - checkout
-        - run:
-            name: Prepare Ruby environment
-            command: |
-              gem update --system
-              gem install bundler
-              bundle install
-        - run:
-            name: Build Gem
-            command: gem build texlogparser.gemspec
+        - attach_workspace:
+            at: .
         - run:
             name: Install Gem
             command: gem install tex_log_parser*.gem
@@ -74,6 +70,20 @@ jobs:
         - run:
             name: Test an actual log
             command: texlogparser -i `ls -d1 test/texlogs/*.log | head -1`
+# TODO How do we actually deploy? Authentication with rubygems.org missing!
+#  deploy:
+#      docker:
+#        - image: circleci/ruby:2.5
+#        - attach_workspace:
+#            at: .
+#        - run:
+#            name: Deploy Gem
+#            command: gem push tex_log_parser*.gem
+#      filters:
+#        branches:
+#          ignore: /.*/
+#        tags:
+#          only: /^v.*/
 
 workflows:
   version: 2
@@ -90,3 +100,4 @@ workflows:
       - test-cli:
           requires:
             - build
+            #- deploy
