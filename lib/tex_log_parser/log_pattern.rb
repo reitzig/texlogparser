@@ -46,8 +46,9 @@ module RegExpPattern
 
   # TODO: document
   def ends_at?(line)
-    match = !(@ending[:pattern][@start_match] =~ line).nil?
-    match == (@ending[:until] == :match)
+    match = @ending[:pattern][@start_match].match(line)
+    @end_match = match unless match.nil?
+    !match.nil? == (@ending[:until] == :match)
   end
 
   # TODO: make failable (e.g. EOF)

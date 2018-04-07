@@ -58,17 +58,19 @@ class TexLogParserTests < Minitest::Test
       'Source file wrong.'
     )
 
-    assert_equal_if_not_nil(
-      content[:source_lines][:from],
-      msg.source_lines[:from],
-      'Start line in source wrong.'
-    )
+    unless content[:source_lines].nil?
+      assert_equal_if_not_nil(
+        content[:source_lines][:from],
+        msg.source_lines[:from],
+        'Start line in source wrong.'
+      )
 
-    assert_equal_if_not_nil(
-      content[:source_lines][:to],
-      msg.source_lines[:to],
-      'End line in source wrong.'
-    )
+      assert_equal_if_not_nil(
+        content[:source_lines][:to],
+        msg.source_lines[:to],
+        'End line in source wrong.'
+      )
+    end
 
     assert_match_if_not_nil(
       content[:message], msg.message,
@@ -121,6 +123,40 @@ class TexLogParserTests < Minitest::Test
                    source_lines: { from: 35, to: 36 },
                    log_lines: { from: 689, to: 690 },
                    level: :warning)
+  end
+
+  def test_002
+    # @type [Array<LogMessage>] messages
+    messages = quick_test('002.log', error: 4, warning: 0, info: 1)
+
+    # Runaway argument?
+    # {Test. Also, it contains some \ref {warnings} and \ref {errors} for t\ETC.
+    verify_message(messages,
+                   message: /Runaway argument/,
+                   source_file: /plain\.tex/,
+                   log_lines: { from: 62, to: 63 },
+                   level: :error)
+
+    # ! File ended while scanning use of \@footnotetext.
+    verify_message(messages,
+                   message: /File ended while scanning/,
+                   source_file: /plain\.tex/,
+                   log_lines: { from: 64, to: 67 },
+                   level: :error)
+
+    # ! Emergency stop.
+    verify_message(messages,
+                   message: /Emergency stop/,
+                   source_file: /plain\.tex/,
+                   log_lines: { from: 69, to: 70 },
+                   level: :error)
+
+    # !  ==> Fatal error occurred, no output PDF file produced!
+    verify_message(messages,
+                   message: /no output PDF/,
+                   source_file: /plain\.tex/,
+                   log_lines: { from: 72, to: 73 },
+                   level: :error)
   end
 end
 

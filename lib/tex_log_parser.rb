@@ -14,12 +14,15 @@ class TexLogParser
   def patterns
     [FileLineError.new,
      PrefixedMultiLinePattern.new,
+     RunawayParameterError.new,
+     ExclaimingError.new,
+     FatalErrorOccurred.new,
      BadHboxWarning.new]
   end
 
   def scope_changes(line)
     case line
-    when /^\s*\(([^()]*)\)\s+(.*)$/
+    when /^\s*\(([^()]*)\)\s*(.*)$/
       # A scope opened and closed immediately -- log it, then
       # continue with rest of the line (there can be multiple such
       # things in one line, see e.g. 000.log:656)
