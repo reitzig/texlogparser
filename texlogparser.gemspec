@@ -2,7 +2,7 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'tex_log_parser/version'
+require 'version'
 
 Gem::Specification.new do |s|
   s.name        = 'tex_log_parser'
