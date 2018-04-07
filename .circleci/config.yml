@@ -55,6 +55,7 @@ jobs:
             root: .
             paths:
               - tex_log_parser*.gem
+              - test/texlogs/*.log
   test-cli:
       docker:
         - image: circleci/ruby:2.5
