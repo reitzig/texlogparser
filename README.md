@@ -4,7 +4,7 @@
 [![Yard docs](http://img.shields.io/badge/yard-docs-green.svg)](http://www.rubydoc.info/gems/tex_log_parser/1.0.0.pre.2) **˙**
 [![Maintainability](https://api.codeclimate.com/v1/badges/748992a2c5f6570797d4/maintainability)](https://codeclimate.com/github/reitzig/texlogparser/maintainability) 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/748992a2c5f6570797d4/test_coverage)](https://codeclimate.com/github/reitzig/texlogparser/test_coverage) **˙**
-[![Travis build status](https://api.travis-ci.org/reitzig/texlogparser.svg?branch=master)](https://travis-ci.org/reitzig/texlogparser)
+[![Circle CI](https://circleci.com/gh/reitzig/texlogparser.svg?style=svg)](https://circleci.com/gh/reitzig/texlogparser)
 [![Inline docs](http://inch-ci.org/github/reitzig/texlogparser.svg?branch=master)](http://inch-ci.org/github/reitzig/texlogparser)
 
 Eases the many pains around logs from (La)TeX engines. 
