@@ -8,10 +8,14 @@ class Logger
   class << self
     attr_accessor :debugging
 
+    def debug?
+      debugging || !ENV['DEBUG'].nil?
+    end
+
     # Logs the given message to STDOUT if `debug` is true.
     # @param [String] message
     def debug(message)
-      puts message if debugging || !ENV['DEBUG'].nil?
+      puts message if debug?
     end
   end
 end

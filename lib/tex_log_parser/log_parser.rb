@@ -3,6 +3,7 @@
 # TODO: document
 module LogParser
   attr_reader :messages
+  attr_reader :scope_changes_by_line if Logger.debug?
 
   # TODO: document
   # @param [Array<String>,IO,StringIO] log
@@ -15,6 +16,7 @@ module LogParser
     @lines = LogBuffer.new(log)
 
     Logger.debug "Parsing from '#{log}'"
+    @scope_changes_by_line = {} if Logger.debug?
   end
 
   # @return [Array<LogPattern>]
@@ -62,7 +64,7 @@ module LogParser
     raise 'Parse already done!' if @lines.empty?
 
     line = @lines.first
-    Logger.debug "\nLine: '#{line.strip}'"
+    Logger.debug "\nLine #{@log_line_number}: '#{line.strip}'"
     msg = nil
 
     # Use the first pattern that matches. Let's hope that's a good heuristic.
@@ -89,7 +91,9 @@ module LogParser
 
   def remove_consumed_lines(i)
     @lines.forward(i)
-    @log_line_number += i
+    @log_line_number                         += i
+
+    @scope_changes_by_line[@log_line_number] = [] if Logger.debug? && i > 0
   end
 
   # @return [LogMessage,nil]
@@ -101,6 +105,7 @@ module LogParser
     message.log_lines = { from: @log_line_number,
                           to: @log_line_number + consumed_lines - 1 }
     message.source_file ||= @files.last
+    message.source_lines ||= { from: nil, to: nil }
 
     Logger.debug message
     remove_consumed_lines consumed_lines
@@ -117,9 +122,13 @@ module LogParser
     scope_changes(@lines.first).each do |op|
       if op == :pop
         left = @files.pop
+
         Logger.debug "- Finished source file: '#{left.nil? ? 'nil' : left}'"
+        @scope_changes_by_line[@log_line_number].push "pop  #{left}" if Logger.debug?
       else # op is file name
         Logger.debug "- Entered source file: '#{op}'"
+        @scope_changes_by_line[@log_line_number].push "push #{op}" if Logger.debug?
+
         @files.push(op)
       end
     end

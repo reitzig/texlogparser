@@ -6,12 +6,20 @@
 #   <inserted text>
 #                   \par
 #   <*> plain.tex
-class ExclaimingError
+#
+# and
+#
+#   ! Font TU/NoSuchFont(0)/m/n/9=NoSuchFont at 9.0pt not loadable: Metric (TFM) fi
+#   le or installed font not found.
+#   <to be read again>
+#                    relax
+#   l.40 \end{document}
+class StandardError
   include RegExpPattern
 
   def initialize
     super(/^\! \w+/,
-          { pattern: ->(_) { /^\s*<\*>\s+([^\s]+)/ }, until: :match, inclusive: true }
+          { pattern: ->(_) { /^\s*<\*>\s+([^\s]+)|^l\.(\d+)\s+/ }, until: :match, inclusive: true }
     )
   end
 
@@ -24,7 +32,11 @@ class ExclaimingError
     msg.message.gsub!(@ending[:pattern][nil], '')
     msg.message.rstrip!
 
-    msg.source_file = @end_match[1]
+    file = @end_match[1]
+    line = @end_match[2].to_i
+
+    msg.source_file = file unless file.nil?
+    msg.source_lines = { from: line, to: line } unless line.nil? || line.zero?
     msg.preformatted = true
 
     [msg, consumed]

@@ -10,9 +10,13 @@ class TexLogParserTests < Minitest::Test
   #
   # @param [String] file
   # @param [Hash<Symbol,Int>] expected
+  # @param [Hash<Int,Array<String>>] expected_scope_changes
   # @return [Array<LogMessage>]
-  def quick_test(file, expected)
+  def quick_test(file, expected, expected_scope_changes = {})
+    Logger.debug "\n\nTesting #{file}"
+
     path = "#{File.expand_path(__dir__)}/texlogs"
+    # @type [LogParser] parser
     parser = TexLogParser.new(File.open("#{path}/#{file}", &:readlines))
 
     messages = parser.parse
@@ -22,10 +26,20 @@ class TexLogParserTests < Minitest::Test
       counts[m.level] += 1
     end
 
+    Logger.debug "\nTesting message counts for #{file}"
     expected.each do |type, exp|
       next if exp.nil?
       assert_equal(exp, counts[type],
                    "Wrong number of #{type}s in '#{file}'")
+    end
+
+    if Logger.debug? && !expected_scope_changes.nil?
+      Logger.debug "\nTesting scope changes for #{file}"
+
+      expected_scope_changes.each do |line, expected|
+        assert_equal(expected, parser.scope_changes_by_line[line],
+                     "Bad scope changes in line #{file}:#{line}:")
+      end
     end
 
     messages
@@ -85,7 +99,12 @@ class TexLogParserTests < Minitest::Test
 
   def test_000
     # @type [Array<LogMessage>] messages
-    messages = quick_test('000.log', error: 2, warning: 2, info: 68)
+    messages = quick_test('000.log', { error: 2, warning: 2, info: 68 },
+                          {
+                            660 => ['push ./plain.toc', 'pop  ./plain.toc'],
+                            644 => ['push /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/nameref.sty'],
+                            651 => ['pop  /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/nameref.sty']
+                          })
 
     # ./plain.tex:31: Undefined control sequence.
     verify_message(messages,
@@ -127,13 +146,25 @@ class TexLogParserTests < Minitest::Test
 
   def test_002
     # @type [Array<LogMessage>] messages
-    messages = quick_test('002.log', error: 4, warning: 0, info: 1)
+    messages = quick_test('002.log', { error: 4, warning: 0, info: 1 },
+                          {
+                            11 => ["push /usr/local/texlive/2016/texmf-dist/tex/generic/german/ngerman.sty"],
+                            12 => ["pop  /usr/local/texlive/2016/texmf-dist/tex/generic/german/ngerman.sty"],
+                            44 => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty",
+                                   "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty",
+                                   "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/hyperref/hyperref.sty"],
+                            52 => [],
+                            53 => ["pop  /usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii",
+                                   "push /usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty"],
+                            61 => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/bbold/Ubbold.fd",
+                                   "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/bbold/Ubbold.fd",
+                                   "pop  ./plain.tex"]
+                          })
 
     # Runaway argument?
     # {Test. Also, it contains some \ref {warnings} and \ref {errors} for t\ETC.
     verify_message(messages,
                    message: /Runaway argument/,
-                   source_file: /plain\.tex/,
                    log_lines: { from: 62, to: 63 },
                    level: :error)
 
@@ -154,9 +185,56 @@ class TexLogParserTests < Minitest::Test
     # !  ==> Fatal error occurred, no output PDF file produced!
     verify_message(messages,
                    message: /no output PDF/,
-                   source_file: /plain\.tex/,
                    log_lines: { from: 72, to: 73 },
                    level: :error)
+  end
+
+  def multitest_003(suffix, line_offset)
+    # @type [Array<LogMessage>] messages
+    messages = quick_test("003_#{suffix}.log", { error: 12, warning: 6 },
+                          {
+                            49 + line_offset => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty"],
+                            52 + line_offset => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty"],
+                            54 + line_offset => ["pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty"],
+                            60 + line_offset => ["push /usr/local/texlive/2016/texmf-dist/tex/latex/graphics-def/xetex.def"],
+                            61 + line_offset => ["push dummy"], # BROKEN_BY_LINEBREAKS
+                            62 + line_offset => ["pop  dummy"],  # BROKEN_BY_LINEBREAKS
+                            63 + line_offset => ["pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics-def/xetex.def",
+                                                 "pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty"],
+                            66 + line_offset => ["pop  /usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphicx.sty"]
+                          })
+
+    # Defining command \setsansfont with sig. 'O{}mO{}' on line 503
+    verify_message(messages,
+                   message: /Defining command \\setsansfont with sig/,
+                   source_file: /fontspec-xetex\.sty/,
+                   source_lines: { from: 503, to: 503 },
+                   log_lines: { from: 283 + line_offset, to: 287 + line_offset },
+                   level: :info)
+
+    # ./plain.tex:5: fontspec error: "font-not-found"
+    verify_message(messages,
+                   message: /font-not-found/,
+                   source_file: /plain\.tex/,
+                   source_lines: { from: 5, to: 5 },
+                   log_lines: { from: 491 + line_offset, to: 502 + line_offset },
+                   level: :error)
+
+    # ./plain.tex:5: Font TU/NoSuchFont(0)/m/n/10=NoSuchFont at 10.0pt not loadable:
+    verify_message(messages,
+                   message: /Font.*not loadable/,
+                   source_file: /plain\.tex/,
+                   source_lines: { from: 5, to: 5 },
+                   log_lines: { from: 544 + line_offset, to: 548 + line_offset },
+                   level: :error)
+  end
+
+  def test_003_xe_nfl
+    multitest_003("xe_nfl", 0)
+  end
+
+  def test_003_xe_fl
+    multitest_003("xe_fl", 1)
   end
 end
 

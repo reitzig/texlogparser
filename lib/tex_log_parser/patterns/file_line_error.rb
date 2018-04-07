@@ -22,6 +22,8 @@ class FileLineError
     msg.preformatted = true
     msg.level = :error
 
+    msg.message.gsub!(@start, '')
+
     [msg, consumed]
   end
 end

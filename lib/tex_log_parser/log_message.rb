@@ -34,7 +34,7 @@ class LogMessage
 
     message = @message
     message = message.split("\n").map(&:strip).join(' ') unless @preformatted
-    message += "\nLog pattern: '#{@pattern}'" if Logger.debugging
+    message += "\nLog pattern: '#{@pattern}'" if Logger.debug?
 
     <<~MSG
       #{@source_file}#{lines}: #{@level.to_s.upcase}
@@ -51,7 +51,7 @@ class LogMessage
       log_lines: @log_lines,
       preformatted: @preformatted
     }
-    hash[:pattern] = @pattern if Logger.debugging
+    hash[:pattern] = @pattern if Logger.debug?
     JSON.pretty_generate hash
   end
 end
