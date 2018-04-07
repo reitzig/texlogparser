@@ -102,3 +102,7 @@ workflows:
           requires:
             - build
             #- deploy
+
+# Notes:
+# - store_artifacts --> make Gem file downloadable from Circle
+# - store_test_results --> for better test analysis
