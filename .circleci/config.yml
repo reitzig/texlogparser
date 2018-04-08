@@ -59,7 +59,7 @@ jobs:
               - test/texlogs/*.log
   doc:
       docker:
-        - image: circleci/ruby:2.3
+        - image: circleci/ruby:2.5
       steps:
         - checkout
         - run:
@@ -70,7 +70,7 @@ jobs:
               bundle install
         - run:
             name: Build Documentation
-            command: rake doc
+            command: bundle exec rake doc
   test-cli:
       docker:
         - image: circleci/ruby:2.5
