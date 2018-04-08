@@ -106,14 +106,10 @@ jobs:
           name: Deploy Gem
           command: |
             echo "gem `gem --version`"
+            mkdir ~/.gem
             cat .circleci/gem_credentials | sed -e "s/__RUBYGEMS_API_KEY__/${RUBYGEMS_API_KEY}/" > ~/.gem/credentials
             gem push tex_log_parser*.gem
             shred -u ~/.gem/credentials
-    filters:
-      branches:
-        ignore: /.*/
-      tags:
-        only: /^v.*/
 
 workflows:
   version: 2
@@ -135,6 +131,11 @@ workflows:
           requires:
             - test-cli
             - doc
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
 
 # Notes:
 # - store_artifacts --> make Gem file downloadable from Circle
