@@ -14,7 +14,9 @@ jobs:
             gem update --system
             gem install bundler
             bundle install
-      - run: rake test DEBUG= > test_output-2.3
+      - run:
+          name: Run tests
+          command: rake test DEBUG= > test_output-2.3
       - store_artifacts:
           path: test_output-2.3
   test-2.4:
@@ -30,7 +32,9 @@ jobs:
             gem update --system
             gem install bundler
             bundle install
-      - run: rake test DEBUG= > test_output-2.4
+      - run:
+          name: Run tests
+          command: rake test DEBUG= > test_output-2.4
       - store_artifacts:
           path: test_output-2.4
   test-2.5:
@@ -143,8 +147,9 @@ jobs:
             gem push tex_log_parser*.gem
             shred -u ~/.gem/credentials
       - store_artifacts:
-          path: tex_log_parser*.gem
-          path: tex_log_parser*-doc.tar.gz
+          path: tex_log_parser-*.gem
+      - store_artifacts:
+          path: tex_log_parser-*-doc.tar.gz
 
 workflows:
   version: 2

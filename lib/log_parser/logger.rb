@@ -5,6 +5,8 @@ module LogParser
   # at some point.
   class Logger
     class << self
+      @debugging = false
+
       # Switches debugging mode on and off.
       #
       # @param [true,false] flag
