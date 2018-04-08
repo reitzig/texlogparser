@@ -115,18 +115,36 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - test-2.3
-      - test-2.4
-      - test-2.5
-      - doc
+      - test-2.3:
+          filters:
+            tags:
+              only: /.*/
+      - test-2.4:
+          filters:
+            tags:
+              only: /.*/
+      - test-2.5:
+          filters:
+            tags:
+              only: /.*/
+      - doc:
+          filters:
+            tags:
+              only: /.*/
       - build:
           requires:
             - test-2.3
             - test-2.4
             - test-2.5
+          filters:
+            tags:
+              only: /.*/
       - test-cli:
           requires:
             - build
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           requires:
             - test-cli
