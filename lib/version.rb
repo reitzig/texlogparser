@@ -3,5 +3,5 @@
 # @attr [String] VERSION
 #   The version of TexLogParser.
 class TexLogParser
-  VERSION = '1.0.0.pre.14'
+  VERSION = '1.0.0.pre.15'
 end

@@ -7,7 +7,7 @@ class TexLogParser
   #     (tocbasic)             because of feature `nobabel' available
   #     (tocbasic)             for `toc' on input line 132.
   #
-  # Note: currently fails if lines get broken badly, e.g. in 000.log:634.
+  # **Note:** Fails to pick up the fill message if lines get broken badly, e.g. in `000_pdf_fl.log:634`.
   class PrefixedMultiLinePattern
     include LogParser::RegExpPattern
 

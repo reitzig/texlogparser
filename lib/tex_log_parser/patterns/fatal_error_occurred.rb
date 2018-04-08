@@ -3,8 +3,8 @@
 class TexLogParser
   # Matches messages of this form:
   #
-  # !  ==> Fatal error occurred, no output PDF file produced!
-  # Transcript written on plain.log.
+  #     !  ==> Fatal error occurred, no output PDF file produced!
+  #     Transcript written on plain.log.
   class FatalErrorOccurred
     include LogParser::RegExpPattern
 

@@ -4,6 +4,9 @@ require 'log_parser/log_parser'
 Dir["#{File.expand_path(__dir__)}/tex_log_parser/patterns/*.rb"].each { |p| require p }
 
 # Parses logs (and output) of LaTeX interpreters, e.g. `pdflatex`, `xelatex` and `lualatex`.
+# Messages are extracted according to a set of patterns (see below).
+#
+# Instances are single-use; create a new one for every log and parsing run.
 #
 # *Note:* Due to shortcomings in the native format of those logs, please be
 # aware of these recommendations:
@@ -24,7 +27,8 @@ class TexLogParser
 
   protected
 
-  # (see LogParser#patterns)
+  # @return [Array<Pattern>]
+  #   The set of patterns this parser utilizes to extract messages.
   def patterns
     [HighlightedMessages.new,
      FileLineError.new,
@@ -35,9 +39,15 @@ class TexLogParser
      BadHboxWarning.new]
   end
 
-  # (see LogParser#scope_changes)
+  # Extracts scope changes in the form of stack operations from the given line.
   #
-  # _Implementation note:_ The basic format in LaTeX logs is that
+  # @param [String] line
+  # @return [Array<String,:pop>]
+  #   A list of new scopes this line enters (filename strings) and leaves (`:pop`).
+  #   Read stack operations from left to right.
+  #
+  #
+  # *Implementation note:* The basic format in LaTeX logs is that
   #  * `(filename` marks the beginning of messages from that file, and
   #  * the matching `)` marks the end.
   # Those nest, of course.

@@ -5,6 +5,7 @@ require 'log_parser/pattern'
 require 'log_parser/buffer'
 require 'log_parser/message'
 
+# Tests whether the different parameterizations of {LogParser::RegExpPattern} work correctly.
 class RegExpPatternTest < Minitest::Test
   def initialize(param)
     super(param)
@@ -30,6 +31,8 @@ class RegExpPatternTest < Minitest::Test
     include LogParser::RegExpPattern
   end
 
+  # Tests one combination of options.
+  #
   # @param [Hash] options
   # @option options [:match,:mismatch] :until
   # @option options [true,false] :inclusive

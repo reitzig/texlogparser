@@ -3,6 +3,7 @@
 require 'minitest/autorun'
 require 'log_parser/buffer'
 
+# Tests whether {LogParser::Buffer} works correctly when reading from arrays.
 class LogBufferArrayTests < Minitest::Test
   def debug(*elements)
     elements

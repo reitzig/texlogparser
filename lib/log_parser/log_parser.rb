@@ -5,12 +5,39 @@ require 'log_parser/buffer'
 require 'log_parser/message'
 require 'log_parser/pattern'
 
-# TODO: document
+# Parses a log, extracting messages according to a set of {Pattern}.
+#
+# Instances are single-use; create a new one for every log and parsing run.
 module LogParser
+  # @return [Array<Message>]
+  #   the messages this parser found in the given log.
   attr_reader :messages
+
+  # The parser keeps a record of the scope changes it detects.
+  #
+  # **Note:** Only available in debug mode; see {Logger}.
+  #
+  # The keys are line indices.
+  # The values are arrays of strings, with one string per scope change,
+  # in the same order as in the original line.
+  #  * Entering a new scope is denoted by
+  #
+  #     ```
+  #     push filename
+  #     ```
+  #    and
+  #  * leaving a scope by
+  #
+  #     ```
+  #     pop  filename
+  #     ```
+  #     Note the extra space after `pop` here; it's there for quaint cosmetic reasons.
+  #
+  # @return [Hash<Integer, Array<String>>]
+  #   the scope changes this parser detected in the given log.
   attr_reader :scope_changes_by_line if Logger.debug?
 
-  # TODO: document
+  # Parses the given log lines and extracts all messages (of known form).
   # @return [Array<Message>]
   def parse
     skip_empty_lines
@@ -45,25 +72,33 @@ module LogParser
 
   # @abstract
   # @return [Array<Pattern>]
+  #   The set of patterns this parser utilizes to extract messages.
   def patterns
     raise NotImplementedError
   end
 
+  # Extracts scope changes in the form of stack operations from the given line.
+  #
   # @abstract
   # @param [String] _line
-  # @return [Array<String,:pop>] A list of new scopes this line enters (strings)
-  #                              and leaves (`:pop`).
-  #                              Read stack operations from left to right.
+  # @return [Array<String,:pop>]
+  #   A list of new scopes this line enters (filename strings) and leaves (`:pop`).
+  #   Read stack operations from left to right.
   def scope_changes(_line)
     raise NotImplementedError
   end
 
+  # @return [true,false]
+  #   `true` if (and only if) there are no more lines to consume.
   def empty?
     @lines.empty?
   end
 
   private
 
+  # Forwards the internal buffer up to the next line that contains anything but whitespace.
+  #
+  # @return [void]
   def skip_empty_lines
     @lines.first
 
@@ -71,8 +106,12 @@ module LogParser
     remove_consumed_lines(first_nonempty_line || @lines.buffer_size)
   end
 
-  # TODO: document
+  # Reads the log until the next full message, consuming the lines.
+  # Assumes that empty lines have already been skipped.
+  #
   # @return [Message,nil]
+  #   The next message that could be extracted, or `nil` if none could be found.
+  # @raise If parsing already finished.
   def parse_next_lines
     raise 'Parse already done!' if @lines.empty?
 
@@ -102,6 +141,9 @@ module LogParser
     msg
   end
 
+  # After reading `i` lines, remove them from the internal buffer using this method.
+  #
+  # @return [void]
   def remove_consumed_lines(i)
     @lines.forward(i)
     @log_line_number += i
@@ -109,7 +151,15 @@ module LogParser
     @scope_changes_by_line[@log_line_number] = [] if Logger.debug? && i.positive?
   end
 
+  # Consume as many lines as the given pattern will match.
+  # Assumes that `pattern.begins_at?(@lines.first)` is `true`.
+  #
+  # If applying `pattern` is not successful, this method consumes a single line.
+  #
+  # @param [Pattern] pattern
+  #   The pattern to use for matching.
   # @return [Message,nil]
+  #   The message `pattern` produced, if any.
   def consume_pattern(pattern)
     # Apply the pattern, i.e. read the next message!
 
@@ -129,6 +179,9 @@ module LogParser
     return nil
   end
 
+  # Extracts the scope changes from the current line and applies them to the file stack `@files`.
+  #
+  # @return [void]
   def apply_scope_changes
     # In the hope that scope changes happen not on the same
     # line as messages. Gulp.

@@ -3,6 +3,7 @@
 require 'minitest/autorun'
 require 'tex_log_parser'
 
+# Verifies that {TexLogParser} processes real logs correctly.
 class TexLogParserTests < Minitest::Test
   # Tests `TexLogParser` against log `000*.log`.
   def test_000
@@ -201,14 +202,22 @@ class TexLogParserTests < Minitest::Test
     messages
   end
 
+  # Asserts equality of `expected` and `actual` iff `expected` is not `nil`.
+  # NOP otherwise.
   def assert_equal_if_not_nil(expected, actual, msg = nil)
     assert_equal(expected, actual, msg) unless expected.nil?
   end
 
-  def assert_match_if_not_nil(expected, actual, msg = nil)
-    assert_match(expected, actual, msg) unless expected.nil?
+  # Asserts that `pattern` matches `string` iff `pattern` is not `nil`.
+  # NOP otherwise.
+  def assert_match_if_not_nil(pattern, string, msg = nil)
+    assert_match(pattern, string, msg) unless pattern.nil?
   end
 
+  # Verifies that the given set of messages contains (at least) one that fits the given parameters.
+  #
+  # The starting log line `content[:log_lines][:from]` is used for _finding_ the requisite message.
+  # When a matching one is found, the other given attributes are checked for equality.
   def verify_message(messages, content = { message: nil, source_file: nil, source_lines: nil,
                                            log_lines: nil, preformatted: nil, level: nil })
     return if content[:log_lines].nil?
