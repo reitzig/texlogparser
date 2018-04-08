@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest', '~> 5.10'
   s.add_development_dependency 'rake', '~> 12.3'
   s.add_development_dependency 'redcarpet', '~> 3.4'
+  s.add_development_dependency 'simplecov', '~> 0.16'
   s.add_development_dependency 'yard', '~> 0.9'
 
   s.add_runtime_dependency 'json', '~> 2.1'
