@@ -98,16 +98,16 @@ jobs:
           name: Build Documentation
           command: rake doc
       - run:
-          name: Pack documentation
+          name: Package documentation
           command: |
             gemfile=`ls tex_log_parser-*.gem`
             cd doc
-            tar -czf ../${gemfile%.gem}-doc.tar.gz *
+            tar -czf ../${gemfile%.gem}-doc.tar.gz ./*
             cd ..
       - persist_to_workspace:
-         root: .
-         paths:
-           - *-doc.tar.gz
+           root: .
+           paths:
+             - tex_log_parser-*-doc.tar.gz
   test-cli:
     docker:
       - image: circleci/ruby:2.5
