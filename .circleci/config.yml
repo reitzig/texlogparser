@@ -59,18 +59,18 @@ jobs:
               - test/texlogs/*.log
   doc:
       docker:
-          - image: circleci/ruby:2.5
-        steps:
-          - checkout
-          - run:
-              name: Prepare Ruby environment
-              command: |
-                gem update --system
-                gem install bundler
-                bundle install
-          - run:
-              name: Build Documentation
-              command: rake doc
+        - image: circleci/ruby:2.5
+      steps:
+        - checkout
+        - run:
+            name: Prepare Ruby environment
+            command: |
+              gem update --system
+              gem install bundler
+              bundle install
+        - run:
+            name: Build Documentation
+            command: rake doc
   test-cli:
       docker:
         - image: circleci/ruby:2.5
@@ -89,6 +89,7 @@ jobs:
   deploy:
       docker:
         - image: circleci/ruby:2.5
+      steps:
         - attach_workspace:
             at: .
         - run:
