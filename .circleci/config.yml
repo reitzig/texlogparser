@@ -14,7 +14,9 @@ jobs:
             gem update --system
             gem install bundler
             bundle install
-      - run: rake test DEBUG=
+      - run: rake test DEBUG= > test_output-2.3
+      - store_artifacts:
+          path: test_output-2.3
   test-2.4:
     docker:
       - image: circleci/ruby:2.4
@@ -28,7 +30,9 @@ jobs:
             gem update --system
             gem install bundler
             bundle install
-      - run: rake test DEBUG=
+      - run: rake test DEBUG= > test_output-2.4
+      - store_artifacts:
+          path: test_output-2.4
   test-2.5:
     docker:
       - image: circleci/ruby:2.5
@@ -51,8 +55,10 @@ jobs:
           name: Run tests
           command: |
             ./cc-test-reporter before-build
-            rake test DEBUG=
+            rake test DEBUG= > test_output-2.5
             ./cc-test-reporter after-build --exit-code $?
+      - store_artifacts:
+          path: test_output-2.5
   build:
     docker:
       - image: circleci/ruby:2.5
@@ -91,6 +97,17 @@ jobs:
       - run:
           name: Build Documentation
           command: rake doc
+      - run:
+          name: Pack documentation
+          command: |
+            gemfile=`ls tex_log_parser-*.gem`
+            cd doc
+            tar -czf ../${gemfile%.gem}-doc.tar.gz *
+            cd ..
+      - persist_to_workspace:
+         root: .
+         paths:
+           - *-doc.tar.gz
   test-cli:
     docker:
       - image: circleci/ruby:2.5
@@ -105,7 +122,9 @@ jobs:
          command: texlogparser -v
       - run:
           name: Test an actual log
-          command: texlogparser -d -i `ls -d1 test/texlogs/*.log | head -1`
+          command: texlogparser -d -i `ls -d1 test/texlogs/*.log | head -1` > test_output-cli
+      - store_artifacts:
+          path: test_output-cli
   deploy:
     docker:
       - image: circleci/ruby:2.5
@@ -121,6 +140,9 @@ jobs:
             chmod 0600 ~/.gem/credentials
             gem push tex_log_parser*.gem
             shred -u ~/.gem/credentials
+      - store_artifacts:
+          path: tex_log_parser*.gem
+          path: tex_log_parser*-doc.tar.gz
 
 workflows:
   version: 2
