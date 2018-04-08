@@ -108,43 +108,90 @@ jobs:
             echo "gem `gem --version`"
             mkdir ~/.gem
             cat .circleci/gem_credentials | sed -e "s/__RUBYGEMS_API_KEY__/${RUBYGEMS_API_KEY}/" > ~/.gem/credentials
+            chmod 0600 ~/.gem/credentials
             gem push tex_log_parser*.gem
             shred -u ~/.gem/credentials
 
 workflows:
   version: 2
+  # Only testing; run on all commits but version tags.
+  test:
+    - test-2.3:
+        filters:
+          tags:
+            ignore: /^v.*/
+    - test-2.4:
+        filters:
+          tags:
+            ignore: /^v.*/
+    - test-2.5:
+        filters:
+          tags:
+            ignore: /^v.*/
+    - doc:
+        filters:
+          tags:
+            ignore: /^v.*/
+    - build:
+        requires:
+          - test-2.3
+          - test-2.4
+          - test-2.5
+        filters:
+          tags:
+            ignore: /^v.*/
+    - test-cli:
+        requires:
+          - build
+        filters:
+          tags:
+            ignore: /^v.*/
+  # Testing and deployment; run all version tags only.
   test-and-deploy:
     jobs:
       - test-2.3:
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v.*/
       - test-2.4:
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v.*/
       - test-2.5:
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v.*/
       - doc:
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v.*/
       - build:
           requires:
             - test-2.3
             - test-2.4
             - test-2.5
           filters:
-            tags:
-              only: /.*/
+            filters:
+              branches:
+                ignore: /.*/
+              tags:
+                only: /^v.*/
       - test-cli:
           requires:
             - build
           filters:
+            branches:
+              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v.*/
       - deploy:
           requires:
             - test-cli
