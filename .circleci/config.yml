@@ -116,36 +116,37 @@ workflows:
   version: 2
   # Only testing; run on all commits but version tags.
   test:
-    - test-2.3:
-        filters:
-          tags:
-            ignore: /^v.*/
-    - test-2.4:
-        filters:
-          tags:
-            ignore: /^v.*/
-    - test-2.5:
-        filters:
-          tags:
-            ignore: /^v.*/
-    - doc:
-        filters:
-          tags:
-            ignore: /^v.*/
-    - build:
-        requires:
-          - test-2.3
-          - test-2.4
-          - test-2.5
-        filters:
-          tags:
-            ignore: /^v.*/
-    - test-cli:
-        requires:
-          - build
-        filters:
-          tags:
-            ignore: /^v.*/
+    jobs:
+      - test-2.3:
+          filters:
+            tags:
+              ignore: /^v.*/
+      - test-2.4:
+          filters:
+            tags:
+              ignore: /^v.*/
+      - test-2.5:
+          filters:
+            tags:
+              ignore: /^v.*/
+      - doc:
+          filters:
+            tags:
+              ignore: /^v.*/
+      - build:
+          requires:
+            - test-2.3
+            - test-2.4
+            - test-2.5
+          filters:
+            tags:
+              ignore: /^v.*/
+      - test-cli:
+          requires:
+            - build
+          filters:
+            tags:
+              ignore: /^v.*/
   # Testing and deployment; run all version tags only.
   test-and-deploy:
     jobs:
