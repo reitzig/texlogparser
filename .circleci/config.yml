@@ -104,6 +104,7 @@ jobs:
             cd doc
             tar -czf "../${gemfile%.gem}-doc.tar.gz" *
             cd ..
+            ls
       - persist_to_workspace:
            root: .
            paths:
