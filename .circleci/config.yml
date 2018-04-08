@@ -180,11 +180,10 @@ workflows:
             - test-2.4
             - test-2.5
           filters:
-            filters:
-              branches:
-                ignore: /.*/
-              tags:
-                only: /^v.*/
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
       - test-cli:
           requires:
             - build
