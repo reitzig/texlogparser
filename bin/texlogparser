@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'tex_log_parser'
-require 'tex_log_parser/version'
+require 'version'
 require 'optparse'
 require 'json'
 

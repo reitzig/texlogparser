@@ -59,7 +59,7 @@ jobs:
               - test/texlogs/*.log
   doc:
       docker:
-        - image: circleci/ruby:2.5
+        - image: circleci/ruby:2.3
       steps:
         - checkout
         - run:
