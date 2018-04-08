@@ -97,14 +97,15 @@ jobs:
       - run:
           name: Build Documentation
           command: rake doc
+      - attach_workspace:
+          at: .
       - run:
           name: Package documentation
           command: |
-            gemfile="`ls -1 | grep .gem | head -1`"
+            gemfile="`ls tex_log_parser-*.gem`"
             cd doc
             tar -czf "../${gemfile%.gem}-doc.tar.gz" *
             cd ..
-            ls
       - persist_to_workspace:
            root: .
            paths:
@@ -162,15 +163,17 @@ workflows:
           filters:
             tags:
               ignore: /^v.*/
-      - doc:
-          filters:
-            tags:
-              ignore: /^v.*/
       - build:
           requires:
             - test-2.3
             - test-2.4
             - test-2.5
+          filters:
+            tags:
+              ignore: /^v.*/
+      - doc:
+          requires:
+            - build
           filters:
             tags:
               ignore: /^v.*/
@@ -201,17 +204,19 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v.*/
-      - doc:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
       - build:
           requires:
             - test-2.3
             - test-2.4
             - test-2.5
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+      - doc:
+          requires:
+            - build
           filters:
             branches:
               ignore: /.*/
