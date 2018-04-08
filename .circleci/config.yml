@@ -100,9 +100,9 @@ jobs:
       - run:
           name: Package documentation
           command: |
-            gemfile=`ls -1 | grep tex_log_parser-*.gem | head -1`
+            gemfile="`ls -1 | grep .gem | head -1`"
             cd doc
-            tar -czf ../${gemfile%.gem}-doc.tar.gz *
+            tar -czf "../${gemfile%.gem}-doc.tar.gz" *
             cd ..
       - persist_to_workspace:
            root: .
