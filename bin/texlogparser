@@ -17,7 +17,7 @@ formats = %i[file_line json]
 OptionParser.new do |opts|
   opts.banner = 'Usage: texlogparser [options]'
   opts.on('-d', '--debug', 'Output debug information') do
-    Logger.debugging = true
+    LogParser::Logger.debug = true
   end
   opts.on('-f ENUM', '--format ENUM', formats,
           'Output format', "One of: #{formats.map(&:to_s).join(', ')}") do |format|
@@ -39,7 +39,7 @@ OptionParser.new do |opts|
     exit
   end
   opts.on_tail('-v', '--version', 'Show version') do
-    puts TexLogParser::VERSION
+    puts "#{File.basename(__FILE__)} #{TexLogParser::VERSION}"
     exit
   end
 
@@ -58,7 +58,7 @@ end
 
 input = STDIN
 input = File.open(options[:input], 'r') if options[:input].is_a?(String)
-parser = TexLogParser.new(input, options)
+parser = TexLogParser.new(input)
 messages = parser.parse
 
 output = STDOUT

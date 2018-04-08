@@ -1,21 +1,30 @@
 # frozen_string_literal: true
 
-require 'logger'
 require 'log_parser/log_parser'
 Dir["#{File.expand_path(__dir__)}/tex_log_parser/patterns/*.rb"].each { |p| require p }
 
-# TODO: document
+# Parses logs (and output) of LaTeX interpreters, e.g. `pdflatex`, `xelatex` and `lualatex`.
+#
+# *Note:* Due to shortcomings in the native format of those logs, please be
+# aware of these recommendations:
+#  - Use `-file-line-error` if possible; it makes for more robust source file and line reporting.
+#  - Ask for log lines to be broken as rarely as possible; see e.g. [here](https://tex.stackexchange.com/q/52988/3213).
+#     Search the sources for `BROKEN_BY_LINEBREAKS` to find all the nastiness (and potential issues) you can avoid by that.
 class TexLogParser
   include LogParser
 
-  def initialize(log, _options = {})
-    super(log, _options)
+  # (see LogParser#initialize)
+  def initialize(log)
+    super(log)
 
     # BROKEN_BY_LINEBREAKS
     # I'd prefer to have this stateless, but well (see below).
     @pushed_dummy = false
   end
 
+  protected
+
+  # (see LogParser#patterns)
   def patterns
     [HighlightedMessages.new,
      FileLineError.new,
@@ -26,6 +35,19 @@ class TexLogParser
      BadHboxWarning.new]
   end
 
+  # (see LogParser#scope_changes)
+  #
+  # _Implementation note:_ The basic format in LaTeX logs is that
+  #  * `(filename` marks the beginning of messages from that file, and
+  #  * the matching `)` marks the end.
+  # Those nest, of course.
+  #
+  # This implementation is mainly concerned with hacking around problems of how this format is implemented in the logs.
+  #  * Filenames may be broken across lines.
+  #  * Opening "tags" may or may not appear on a dedicated line.
+  #  * Closing "tags" may or may not appear on a dedicated line.
+  #  * Badly line-broken message fragments with parentheses confuse matching heuristics for either.
+  # If inopportune line breaks can be avoided, this method is a lot more reliable.
   def scope_changes(line)
     pushed_dummy = false
 
@@ -54,7 +76,7 @@ class TexLogParser
       when /^[^()]*\)/
         # BROKEN_BY_LINEBREAKS
         # Badly broken lines may push ) prefixed by non-whitespace. Narf.
-        [:pop] if @pushed_dummy ? [:pop] : []
+        @pushed_dummy ? [:pop] : []
       else
         []
       end

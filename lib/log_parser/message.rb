@@ -38,6 +38,9 @@ module LogParser
     attr_accessor :message, :source_file, :source_lines, :log_lines,
                   :preformatted, :level
 
+    # Convert this message to a file-line string representation.
+    #
+    # @return [String]
     def to_s
       lines = if @source_lines.nil?
                 ''
@@ -56,6 +59,10 @@ module LogParser
       MSG
     end
 
+    # Convert this message to JSON.
+    #
+    # @return [String]
+    #   The JSON string representing this message.
     def to_json(_options = {})
       hash = {
         level: @level,

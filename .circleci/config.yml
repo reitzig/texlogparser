@@ -9,104 +9,115 @@ jobs:
       - run:
           name: Prepare Ruby environment
           command: |
+            ruby --version
+            echo "gem `gem --version`"
             gem update --system
             gem install bundler
             bundle install
       - run: rake test
   test-2.4:
-      docker:
-        - image: circleci/ruby:2.4
-      steps:
-        - checkout
-        - run:
-            name: Prepare Ruby environment
-            command: |
-              gem update --system
-              gem install bundler
-              bundle install
-        - run: rake test
+    docker:
+      - image: circleci/ruby:2.4
+    steps:
+      - checkout
+      - run:
+          name: Prepare Ruby environment
+          command: |
+            ruby --version
+            echo "gem `gem --version`"
+            gem update --system
+            gem install bundler
+            bundle install
+      - run: rake test
   test-2.5:
-      docker:
-        - image: circleci/ruby:2.5
-      steps:
-        - checkout
-        - run:
-            name: Prepare Ruby environment
-            command: |
-              gem update --system
-              gem install bundler
-              bundle install
-        - run: rake test
+    docker:
+      - image: circleci/ruby:2.5
+    steps:
+      - checkout
+      - run:
+          name: Prepare Ruby environment
+          command: |
+            ruby --version
+            echo "gem `gem --version`"
+            gem update --system
+            gem install bundler
+            bundle install
+      - run: rake test
   build:
-      docker:
-        - image: circleci/ruby:2.5
-      steps:
-        - checkout
-        - run:
-            name: Prepare Ruby environment
-            command: |
-              gem update --system
-              gem install bundler
-              bundle install
-        - run:
-            name: Build Gem
-            command: gem build texlogparser.gemspec
-        - persist_to_workspace:
-            root: .
-            paths:
-              - .circleci/gem_credentials
-              - tex_log_parser*.gem
-              - test/texlogs/*.log
+    docker:
+      - image: circleci/ruby:2.5
+    steps:
+      - checkout
+      - run:
+          name: Prepare Ruby environment
+          command: |
+            ruby --version
+            echo "gem `gem --version`"
+            gem update --system
+            gem install bundler
+            bundle install
+      - run:
+          name: Build Gem
+          command: gem build texlogparser.gemspec
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .circleci/gem_credentials
+            - tex_log_parser*.gem
+            - test/texlogs/*.log
   doc:
-      docker:
-        - image: circleci/ruby:2.5
-      steps:
-        - checkout
-        - run:
-            name: Prepare Ruby environment
-            command: |
-              gem update --system
-              gem install bundler
-              bundle install
-        - run:
-            name: Build Documentation
-            command: bundle exec rake doc
+    docker:
+      - image: circleci/ruby:2.5
+    steps:
+      - checkout
+      - run:
+          name: Prepare Ruby environment
+          command: |
+            ruby --version
+            echo "gem `gem --version`"
+            gem update --system
+            gem install bundler
+            bundle install
+      - run:
+          name: Build Documentation
+          command: rake doc
   test-cli:
-      docker:
-        - image: circleci/ruby:2.5
-      steps:
-        - attach_workspace:
-            at: .
-        - run:
-            name: Install Gem
-            command: gem install tex_log_parser*.gem
-        - run:
-           name: Test version output
-           command: texlogparser -v
-        - run:
-            name: Test an actual log
-            command: texlogparser -i `ls -d1 test/texlogs/*.log | head -1`
+    docker:
+      - image: circleci/ruby:2.5
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install Gem
+          command: gem install tex_log_parser*.gem
+      - run:
+         name: Test version output
+         command: texlogparser -v
+      - run:
+          name: Test an actual log
+          command: texlogparser -i `ls -d1 test/texlogs/*.log | head -1`
   deploy:
-      docker:
-        - image: circleci/ruby:2.5
-      steps:
-        - attach_workspace:
-            at: .
-        - run:
-            name: Deploy Gem
-            command: |
-              cat .circleci/gem_credentials | sed -e "s/__RUBYGEMS_API_KEY__/${RUBYGEMS_API_KEY}/" > ~/.gem/credentials
-              gem push tex_log_parser*.gem
-              shred -u ~/.gem/credentials
-      filters:
-        branches:
-          ignore: /.*/
-        tags:
-          only: /^v.*/
+    docker:
+      - image: circleci/ruby:2.5
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Deploy Gem
+          command: |
+            echo "gem `gem --version`"
+            cat .circleci/gem_credentials | sed -e "s/__RUBYGEMS_API_KEY__/${RUBYGEMS_API_KEY}/" > ~/.gem/credentials
+            gem push tex_log_parser*.gem
+            shred -u ~/.gem/credentials
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v.*/
 
 workflows:
   version: 2
-  test:
+  test-and-deploy:
     jobs:
       - test-2.3
       - test-2.4

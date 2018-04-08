@@ -103,12 +103,15 @@ module LogParser
     #
     # @param [Integer] offset
     #   The number of lines to drop.
+    # @return [void]
     def forward(offset = 1)
       self[offset]
       @buffer.slice!(0, offset)
     end
 
     # Closes the `IO` this buffer reads from, if any.
+    #
+    # @return [void]
     def close
       @stream.close unless @stream.nil? || @stream.closed?
     end

@@ -169,7 +169,7 @@ class TexLogParserTests < Minitest::Test
   # @param [Hash<Int,Array<String>>] expected_scope_changes
   # @return [Array<Message>]
   def quick_test(file, expected, expected_scope_changes = {})
-    Logger.debug "\n\nTesting #{file}"
+    LogParser::Logger.debug "\n\nTesting #{file}"
 
     path = "#{File.expand_path(__dir__)}/texlogs"
     # @type [LogParser] parser
@@ -182,15 +182,15 @@ class TexLogParserTests < Minitest::Test
       counts[m.level] += 1
     end
 
-    Logger.debug "\nTesting message counts for #{file}"
+    LogParser::Logger.debug "\nTesting message counts for #{file}"
     expected.each do |type, exp|
       next if exp.nil?
       assert_equal(exp, counts[type],
                    "Wrong number of #{type}s in '#{file}'")
     end
 
-    if Logger.debug? && !expected_scope_changes.nil?
-      Logger.debug "\nTesting scope changes for #{file}"
+    if LogParser::Logger.debug? && !expected_scope_changes.nil?
+      LogParser::Logger.debug "\nTesting scope changes for #{file}"
 
       expected_scope_changes.each do |line, ops|
         assert_equal(ops, parser.scope_changes_by_line[line],

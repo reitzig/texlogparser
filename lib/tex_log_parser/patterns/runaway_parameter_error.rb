@@ -1,24 +1,28 @@
 # frozen_string_literal: true
 
-# Matches messages of this form:
-#
-#   Runaway argument?
-#   {Test. Also, it contains some \ref {warnings} and \ref {errors} for t\ETC.
-class RunawayParameterError
-  include LogParser::RegExpPattern
+class TexLogParser
+  # Matches messages of this form:
+  #
+  #     Runaway argument?
+  #     {Test. Also, it contains some \ref {warnings} and \ref {errors} for t\ETC.
+  class RunawayParameterError
+    include LogParser::RegExpPattern
 
-  def initialize
-    super(/^Runaway argument\?/,
-          { pattern: ->(_) { /./ }, until: :match, inclusive: true }
-    )
-  end
+    # Creates a new instance.
+    def initialize
+      super(/^Runaway argument\?/,
+            { pattern: ->(_) { /./ }, until: :match, inclusive: true }
+      )
+    end
 
-  def read(lines)
-    # @type [Message] msg
-    msg, consumed = super(lines)
+    # (see LogParser::RegExpPattern#read)
+    def read(lines)
+      # @type [Message] msg
+      msg, consumed = super(lines)
 
-    msg.level = :error
+      msg.level = :error
 
-    [msg, consumed]
+      [msg, consumed]
+    end
   end
 end

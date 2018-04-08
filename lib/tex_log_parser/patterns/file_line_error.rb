@@ -1,29 +1,33 @@
 # frozen_string_literal: true
 
-# Matches messages of this form:
-#
-#   ./plain.tex:31: Undefined control sequence.
-#   l.31 ...t contains some \ref{warnings} and \errors
-#                                                       for testing.
-class FileLineError
-  include LogParser::RegExpPattern
+class TexLogParser
+  # Matches messages of this form:
+  #
+  #     ./plain.tex:31: Undefined control sequence.
+  #     l.31 ...t contains some \ref{warnings} and \errors
+  #                                                         for testing.
+  class FileLineError
+    include LogParser::RegExpPattern
 
-  def initialize
-    super(%r{^(/?(?:.*?/)*[^/]+):(\d+):})
-  end
+    # Creates a new instance.
+    def initialize
+      super(%r{^(/?(?:.*?/)*[^/]+):(\d+):})
+    end
 
-  def read(lines)
-    # @type [Message] msg
-    msg, consumed = super(lines)
+    # (see LogParser::RegExpPattern#read)
+    def read(lines)
+      # @type [Message] msg
+      msg, consumed = super(lines)
 
-    msg.source_file = @start_match[1]
-    line = @start_match[2].to_i
-    msg.source_lines = { from: line, to: line }
-    msg.preformatted = true
-    msg.level = :error
+      msg.source_file = @start_match[1]
+      line = @start_match[2].to_i
+      msg.source_lines = { from: line, to: line }
+      msg.preformatted = true
+      msg.level = :error
 
-    msg.message.gsub!(@start, '')
+      msg.message.gsub!(@start, '')
 
-    [msg, consumed]
+      [msg, consumed]
+    end
   end
 end

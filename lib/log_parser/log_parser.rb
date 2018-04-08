@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'log_parser/logger'
 require 'log_parser/buffer'
 require 'log_parser/message'
 require 'log_parser/pattern'
@@ -8,37 +9,6 @@ require 'log_parser/pattern'
 module LogParser
   attr_reader :messages
   attr_reader :scope_changes_by_line if Logger.debug?
-
-  # TODO: document
-  # @param [Array<String>,IO,StringIO] log
-  # @param [Hash] _options
-  def initialize(log, _options = {})
-    @files = []
-
-    @messages = []
-    @log_line_number = 1
-    @lines = LogParser::Buffer.new(log)
-
-    Logger.debug "Parsing from '#{log}'"
-    @scope_changes_by_line = {} if Logger.debug?
-  end
-
-  # @return [Array<Pattern>]
-  def patterns
-    raise NotImplementedError
-  end
-
-  # @param [String] _line
-  # @return [Array<String,:pop>] A list of new scopes this line enters (strings)
-  #                              and leaves (`:pop`).
-  #                              Read stack operations from left to right.
-  def scope_changes(_line)
-    raise NotImplementedError
-  end
-
-  def empty?
-    @lines.empty?
-  end
 
   # TODO: document
   # @return [Array<Message>]
@@ -51,6 +21,45 @@ module LogParser
 
     # TODO: Remove duplicates?
     @messages
+  end
+
+  protected
+
+  # Creates a new instance.
+  #
+  # This parser will read lines one by one from the given `log`.
+  # If it is an `IO` or `StringIO`, only those lines currently under investigation will be kept in memory.
+  #
+  # @param [Array<String>,IO,StringIO] log
+  #   A set of log lines that will be parsed.
+  def initialize(log)
+    @files = []
+
+    @messages = []
+    @log_line_number = 1
+    @lines = LogParser::Buffer.new(log)
+
+    Logger.debug "Parsing from '#{log}'"
+    @scope_changes_by_line = {} if Logger.debug?
+  end
+
+  # @abstract
+  # @return [Array<Pattern>]
+  def patterns
+    raise NotImplementedError
+  end
+
+  # @abstract
+  # @param [String] _line
+  # @return [Array<String,:pop>] A list of new scopes this line enters (strings)
+  #                              and leaves (`:pop`).
+  #                              Read stack operations from left to right.
+  def scope_changes(_line)
+    raise NotImplementedError
+  end
+
+  def empty?
+    @lines.empty?
   end
 
   private
