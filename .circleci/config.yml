@@ -16,10 +16,10 @@ jobs:
             bundle install
       - run:
           name: Run tests
-          command: rake test DEBUG= > test_output-2.3
+          command: rake test DEBUG= > test_output
       - store_artifacts:
           path: test_output-2.3
-          destination: tests
+          destination: tests/log-2.3
   test-2.4:
     docker:
       - image: circleci/ruby:2.4
@@ -35,10 +35,10 @@ jobs:
             bundle install
       - run:
           name: Run tests
-          command: rake test DEBUG= > test_output-2.4
+          command: rake test DEBUG= > test_output
       - store_artifacts:
           path: test_output-2.4
-          destination: tests
+          destination: tests/log-2.4
   test-2.5:
     docker:
       - image: circleci/ruby:2.5
@@ -61,11 +61,11 @@ jobs:
           name: Run tests
           command: |
             ./cc-test-reporter before-build
-            rake test DEBUG= > test_output-2.5
+            rake test DEBUG= > test_output
             ./cc-test-reporter after-build --exit-code $?
       - store_artifacts:
-          path: test_output-2.5
-          destination: tests
+          path: test_output
+          destination: tests/log-2.5
   build:
     docker:
       - image: circleci/ruby:2.5
@@ -151,10 +151,10 @@ jobs:
             shred -u ~/.gem/credentials
       - store_artifacts:
           path: tex_log_parser-*.gem
-          destination: dist
+          destination: dist/tex_log_parser.gem # TODO how to get version number here?
       - store_artifacts:
           path: tex_log_parser-*-doc.tar.gz
-          destination: dist
+          destination: dist/tex_log_parser-doc.tar.gz # TODO how to get version number here?
 
 workflows:
   version: 2
