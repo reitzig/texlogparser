@@ -66,7 +66,7 @@ module LogParser
     @log_line_number = 1
     @lines = LogParser::Buffer.new(log)
 
-    Logger.debug "Parsing from '#{log}'"
+    #Logger.debug "Parsing from '#{log}'"
     @scope_changes_by_line = {} if Logger.debug?
   end
 

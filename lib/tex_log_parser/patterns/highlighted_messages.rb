@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-  class TexLogParser
+class TexLogParser
   # Matches messages of these forms:
   #
   #     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

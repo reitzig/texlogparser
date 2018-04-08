@@ -5,14 +5,12 @@ module LogParser
   # at some point.
   class Logger
     class << self
-      @debugging = false
-
       # Switches debugging mode on and off.
       #
       # @param [true,false] flag
       # @return [void]
       def debug=(flag)
-        @debugging = flag
+        self.debugging = flag
       end
 
       # Indicates whether we are debugging.
@@ -20,7 +18,7 @@ module LogParser
       # @return [true,false]
       #   `true` if we are in debugging mode, `false` otherwise.
       def debug?
-        @debugging || !ENV['DEBUG'].nil?
+        debugging || !ENV['DEBUG'].nil?
       end
 
       # Logs the given message to STDOUT if `debug?` is true.
@@ -30,6 +28,10 @@ module LogParser
       def debug(message)
         puts message if debug?
       end
+
+      private
+
+      attr_accessor :debugging
     end
   end
 end

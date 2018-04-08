@@ -19,6 +19,7 @@ jobs:
           command: rake test DEBUG= > test_output-2.3
       - store_artifacts:
           path: test_output-2.3
+          destination: tests
   test-2.4:
     docker:
       - image: circleci/ruby:2.4
@@ -37,6 +38,7 @@ jobs:
           command: rake test DEBUG= > test_output-2.4
       - store_artifacts:
           path: test_output-2.4
+          destination: tests
   test-2.5:
     docker:
       - image: circleci/ruby:2.5
@@ -63,6 +65,7 @@ jobs:
             ./cc-test-reporter after-build --exit-code $?
       - store_artifacts:
           path: test_output-2.5
+          destination: tests
   build:
     docker:
       - image: circleci/ruby:2.5
@@ -148,8 +151,10 @@ jobs:
             shred -u ~/.gem/credentials
       - store_artifacts:
           path: tex_log_parser-*.gem
+          destination: dist
       - store_artifacts:
           path: tex_log_parser-*-doc.tar.gz
+          destination: dist
 
 workflows:
   version: 2
