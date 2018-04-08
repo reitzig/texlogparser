@@ -147,7 +147,7 @@ workflows:
           filters:
             tags:
               ignore: /^v.*/
-  # Testing and deployment; run all version tags only.
+  # Testing and deployment; run on version tags only.
   test-and-deploy:
     jobs:
       - test-2.3:
