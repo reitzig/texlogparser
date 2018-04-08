@@ -41,8 +41,18 @@ jobs:
             echo "gem `gem --version`"
             gem update --system
             gem install bundler
-            bundle install DEBUG=
-      - run: rake test
+            bundle install
+      - run: # We only need coverage once; use the most recent Ruby for that.
+          name: Prepare test coverage reporting
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Run tests
+          command: |
+            ./cc-test-reporter before-build
+            rake test DEBUG=
+            ./cc-test-reporter after-build --exit-code $?
   build:
     docker:
       - image: circleci/ruby:2.5
