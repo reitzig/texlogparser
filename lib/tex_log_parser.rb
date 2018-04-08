@@ -77,6 +77,13 @@ class TexLogParser
         # Scopes close on a dedicated line, except if they don't (cf 000.log:624)
         # So we have to continue on the rest of the line. Uh oh.
         ([:pop] * Regexp.last_match(1).length) + scope_changes(Regexp.last_match(2))
+      when /v.*? \d{4}-\d{2}-\d{2}\)(.*)$/
+        # Apparently, some nasty packages write their version number in front
+        # of the closing parenthesis, despite otherwise adhering to the format.
+        # See e.g. `002_pdf_fl.log:12`.
+        # This is a fix specifically for that situation -- let's hope that there
+        # are not many more similar ones.
+        [:pop] + scope_changes(Regexp.last_match(2))
       when /\([^)]*$/
         # BROKEN_BY_LINEBREAKS
         # Bad linebreaks can cause trailing ) to spill over. Narf.
