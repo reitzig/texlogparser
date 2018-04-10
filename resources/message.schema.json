@@ -1,0 +1,14 @@
+{
+  "level": "info",
+  "source_file": "/usr/local/texlive/2016/texmf-dist/tex/latex/base/fleqn.clo",
+  "source_lines": {
+    "from": 51,
+    "to": 51
+  },
+  "message": "LaTeX Info: Redefining \\[ on input line 51.",
+  "log_lines": {
+    "from": 15,
+    "to": 15
+  },
+  "preformatted": true
+}

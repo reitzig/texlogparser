@@ -49,7 +49,7 @@ class TexLogParserTests < Minitest::Test
                    message: /Underfull \\hbox/,
                    source_file: /001\.tex/,
                    source_lines: { from: 35, to: 36 },
-                   log_lines: { from: 689, to: 690 },
+                   log_lines: { from: 689, to: 689 },
                    level: :warning)
   end
 
@@ -154,6 +154,43 @@ class TexLogParserTests < Minitest::Test
   # i.e. the variant obtained by running `xelatex` with `-file-line-error`
   def test_003_xe_fl
     multitest_003('xe_fl', 1)
+  end
+
+  def test_004_pdf
+    # @type [Array<Message>] messages
+    messages = quick_test("004_pdf.log", { error: 0, warning: 1 },
+                          #47 => ['push ./test.aux', 'pop  ./test.aux', 'pop  ./test.tex'] # TODO do we stand a chance?
+    )
+
+    # Underfull \hbox (badness 10000) in paragraph at lines 35--36
+    verify_message(messages,
+                   message: /Underfull \\hbox/,
+                   source_file: /test\.tex/,
+                   source_lines: { from: 3, to: 3 },
+                   log_lines: { from: 41, to: 42 },
+                   level: :warning)
+  end
+
+  def test_005_pdf
+    # @type [Array<Message>] messages
+    messages = quick_test("005_pdf_nfl.log", { error: 1, warning: 1 },
+                          20 => ['push ./005.aux', 'pop  ./005.aux', 'pop  ./005.tex']
+    )
+
+    # Underfull \hbox (badness 10000) in paragraph at lines 35--36
+    verify_message(messages,
+                   message: /Underfull \\hbox/,
+                   source_file: /005\.tex/,
+                   source_lines: { from: 9, to: 10 },
+                   log_lines: { from: 12, to: 12 },
+                   level: :warning)
+
+    verify_message(messages,
+                   message: /Undefined control sequence[\s.]*\\zzz/,
+                   source_file: /005\.tex/,
+                   source_lines: { from: 12, to: 12 },
+                   log_lines: { from: 14, to: 17 },
+                   level: :error)
   end
 
   private

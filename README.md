@@ -40,6 +40,10 @@ This adds so little runtime overhead that there are few reasons _not_ to use it.
 Note that the original log file will still be written to `example.log`, 
 so no information is lost.
 
+**Important:** Without `nonstopmode`, `pdflatex` et al. stop on errors to interact
+with the user; `texlogparser` is not prepared to play the middle man for that and
+will block.
+
 You can also read from and/or write to files:
 
 ```bash
@@ -78,6 +82,11 @@ Here are some tips on how to generate logs that do not trip up parsing unnecessa
     to improve overall efficacy. Bad linebreaks are 
         [bad](https://github.com/reitzig/texlogparser/search?utf8=%E2%9C%93&q=BROKEN_BY_LINEBREAKS&type=).
  * Avoid parentheses and whitespace in file paths.
+ * The shell output of the initial run of `pdflatex` et al. on a new file can 
+    contain output of subprograms, and be complicated in other ways as well. 
+    It is therefore more robust to use the log file as written to disk, and/or 
+    the output resp. log file produced by a subsequent run. 
+    (Don't worry, real errors will stick around!) 
 
 ## Contributing
 
@@ -127,3 +136,9 @@ very appreciated. Particular areas of interest include:
  * Is the Gem structured properly?
  * What can be improved to encourage code contributions?
  * Does the CLI script have problems on any platform?
+ 
+### Contributors
+
+ * [egreg](https://tex.stackexchange.com/users/4427/egreg) and
+   [David Carlisle](https://tex.stackexchange.com/users/1090/david-carlisle)
+   provided helpful test cases and insight in LaTeX Stack Exchange chat. 

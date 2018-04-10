@@ -1,0 +1,24 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./005.tex
+LaTeX2e <2017/01/01> patch level 3
+Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
+(/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2016/texmf-dist/tex/latex/base/size10.clo))
+No file 005.aux.
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--10
+
+! Undefined control sequence.
+\zzz ->\zz 
+           
+l.12 \zzzz
+          
+[1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(./005.aux) )
+(see the transcript file for additional information)</usr/local/texlive/2016/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on 005.pdf (1 page, 9733 bytes).
+Transcript written on 005.log.

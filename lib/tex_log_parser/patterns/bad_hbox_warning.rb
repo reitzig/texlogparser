@@ -17,8 +17,8 @@ class TexLogParser
 
     # Creates a new instance.
     def initialize
-      super(/^(Over|Under)full \\hbox.*at lines (\d+)--(\d+)/,
-            { pattern: ->(_) { /^\s*\[\]\s*$/ }, until: :match, inclusive: false }
+      super(/^(Over|Under)full \\hbox.*at line(?:s)? (\d+)(?:--(\d+))?/,
+            { pattern: ->(_) { /^\s*(\[\])?\s*$/ }, until: :match, inclusive: false }
       )
     end
 
@@ -27,8 +27,9 @@ class TexLogParser
       # @type [Message] msg
       msg, consumed = super(lines)
 
-      msg.source_lines = { from: @start_match[2].to_i,
-                           to: @start_match[3].to_i }
+      from_line = @start_match[2].to_i
+      end_line = @start_match[3].nil? ? from_line :  @start_match[3].to_i
+      msg.source_lines = { from: from_line, to: end_line }
       msg.preformatted = true
       msg.level = :warning
 
