@@ -1,3 +1,6 @@
+# Note: Currently not in use. Not fully functional.
+#       Corresponds to test-2.3, test-2.4, test-2.5 in the Circle CI config.
+
 language: ruby
 cache: bundler
 rvm:

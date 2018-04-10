@@ -1,7 +1,9 @@
 .idea/
 .yardoc/
 doc/
+coverage/
 
 .rake_tasks~
 *.gem
+*.tar.gz
 Gemfile.lock
