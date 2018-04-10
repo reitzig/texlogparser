@@ -51,10 +51,27 @@ cat example.log | texlogparser -o example.simple.log # From stdin, to file
 If you want to use the output programmatically, you may want to add option `-f json`.
 It does just what it sounds like.
 
- 
 ### Ruby API
 
+The interface is rather narrow; your main entry point is class 
+    [TexLogParser](http://www.rubydoc.info/gems/tex_log_parser/TexLogParser).
+Calling `parse` on it will yield a list of 
+    [Message](http://www.rubydoc.info/gems/tex_log_parser/LogParser/Message) 
+objects.
+
+Here is a minimal yet complete example:
+
+```ruby
+require 'tex_log_parser'
+
+log = File.readlines('example.log')
+parser = TexLogParser.new(log)
+puts parser.parse[0]
+```
+
 ### Recommendations
+
+Here are some tips on how to generate logs that do not trip up parsing unnecessarily:
 
  * Use `_latex` option `-file-line-error` to get higher accuracy regarding source files and lines.
  * [Increase the maximum line length](https://tex.stackexchange.com/a/52994/3213) as much as possible
