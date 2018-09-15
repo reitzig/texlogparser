@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.files       = Dir['lib/**/*.rb', 'bin/*', 'LICENSE', '*.md']
 
   s.add_development_dependency 'github-markup', '~> 2.0'
+  s.add_development_dependency 'json-schema', '~> 2.8'
   s.add_development_dependency 'minitest', '~> 5.10'
   s.add_development_dependency 'rake', '~> 12.3'
   s.add_development_dependency 'redcarpet', '~> 3.4'

@@ -168,7 +168,6 @@ module LogParser
     message.log_lines = { from: @log_line_number,
                           to: @log_line_number + consumed_lines - 1 }
     message.source_file ||= @files.last
-    message.source_lines ||= { from: nil, to: nil }
 
     Logger.debug message
     remove_consumed_lines consumed_lines

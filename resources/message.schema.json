@@ -1,14 +1,71 @@
 {
-  "level": "info",
-  "source_file": "/usr/local/texlive/2016/texmf-dist/tex/latex/base/fleqn.clo",
-  "source_lines": {
-    "from": 51,
-    "to": 51
+  "title": "(La)TeX Log",
+  "description": "Content of a (La)TeX log as parsed by texlogparser.",
+  "$schema": "http://json-schema.org/draft-06/schema#",
+
+  "definitions": {
+    "lines": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "integer"
+        },
+        "to": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ]
+    }
   },
-  "message": "LaTeX Info: Redefining \\[ on input line 51.",
-  "log_lines": {
-    "from": 15,
-    "to": 15
-  },
-  "preformatted": true
+
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "level": {
+        "type": "string",
+        "enum": [
+          "error",
+          "warning",
+          "info"
+        ]
+      },
+      "message": {
+        "type": "string"
+      },
+      "source_file": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "source_lines": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/lines"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "log_lines": {
+        "$ref": "#/definitions/lines"
+      },
+      "preformatted": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "level",
+      "message"
+    ]
+  }
 }
