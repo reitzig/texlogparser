@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TexLogParser
-  # Matches messages of these forms:
+  # Matches messages as produces by LaTeX 3, i.e. those of these forms:
   #
   #     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   #     !
@@ -38,17 +38,30 @@ class TexLogParser
   #     .
   #     . Defining command \fontspec with sig. 'O{}mO{}' on line 472.
   #     .................................................
+  #
+  # and
+  #
+  #     *************************************************
+  #     * widows-and-orphans warning: "orphan-widow"
+  #     *
+  #     * Orphan on page 1 (second column) and widow on page 2 (first column)
+  #     *************************************************
   class HighlightedMessages
     include LogParser::RegExpPattern
 
     # Creates a new instance.
     def initialize
-      super(/^(!{3,}|\.{3,})$/,
+      super(/^(!{3,}|\.{3,}|\*{3,})$/,
             { pattern: lambda { |m|
-                         if m[1][0] == '!'
+                         case m[1][0]
+                         when '!'
                            /^l\.(\d+)/
-                         else
+                         when '*'
+                           /^\*{3,}\s*$/
+                         when '.'
                            /^\.{3,}\s*$/
+                         else
+                           raise("Expected one of `[!.*]` but found: #{m[1][0]}")
                          end
                        },
               until: :match,
@@ -89,14 +102,14 @@ class TexLogParser
           msg.source_lines = { from: line, to: line }
         end
 
-        msg.level = :info
+        msg.level = @start_match[1][0] == '*' ? :warning : :info
 
         msg.message.gsub!(@end_match[0], '')
       end
 
       msg.preformatted = true
-      msg.message.gsub!(@start, '')
-      msg.message.gsub!(/^#{@start_match[1][0]}\s+/, '')
+      msg.message.sub!(@start, '')
+      msg.message.gsub!(/^#{Regexp.escape(@start_match[1][0])}\s+/, '')
       msg.message.strip!
 
       [msg, consumed]

@@ -193,6 +193,24 @@ class TexLogParserTests < Minitest::Test
                    level: :error)
   end
 
+  def test_006_pdf
+    # @type [Array<Message>] messages
+    messages = quick_test("006_pdf.log", { error: 0, warning: 1, info: 15 })
+
+    verify_message(messages,
+                   message: /Orphan on page \d+ \(.*? column\) and widow on page \d+ \(.*? column\)/,
+                   source_file: /006\.tex/,
+                   log_lines: { from: 230, to: 234 },
+                   level: :warning)
+
+    verify_message(messages,
+                   message: /Defining command \\WaOignorenext with sig/,
+                   source_file: /widows-and-orp/, # BROKEN_BY_LINEBREAKS
+                   source_lines: { from: 243, to: 243 },
+                   log_lines: { from: 209, to: 213 },
+                   level: :info)
+  end
+
   private
 
   # Reads the given file, parses it and compares the counts
