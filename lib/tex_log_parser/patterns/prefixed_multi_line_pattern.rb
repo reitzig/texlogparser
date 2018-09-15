@@ -47,7 +47,10 @@ class TexLogParser
         msg.source_lines = { from: line, to: line }
       end
 
-      # TODO: message itself contains useless line prefixes --> remove, preformatted = false
+      # Remove uninformative line prefixes (e.g. `(tocbasic)`)
+      unless @start_match[2].nil?
+        msg.message.gsub!(@ending[:pattern][@start_match], ' ' * (@start_match[2].length + 2))
+      end
 
       [msg, consumed]
     end

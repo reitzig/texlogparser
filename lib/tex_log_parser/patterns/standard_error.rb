@@ -33,6 +33,9 @@ class TexLogParser
       msg.level = :error
       # Remove last line
       msg.message.gsub!(@ending[:pattern][nil], '')
+      # Remove `! ` prefix
+      msg.message.sub!(/^!\s*/, '')
+      # Remove trailing whitespace
       msg.message.rstrip!
 
       file = @end_match[1]
